@@ -1,4 +1,9 @@
-﻿namespace Caitlyn
+﻿// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="CaitlynPackage.cs" company="Caitlyn development team">
+//   Copyright (c) 2008 - 2013 Caitlyn development team. All rights reserved.
+// </copyright>
+// --------------------------------------------------------------------------------------------------------------------
+namespace Caitlyn
 {
     using System;
     using System.ComponentModel.Design;
@@ -7,19 +12,23 @@
     using System.Linq;
     using System.Runtime.InteropServices;
     using System.Windows;
+
+    using Caitlyn.Services;
+    using Caitlyn.ViewModels;
+
     using Catel.IoC;
     using Catel.MVVM.Services;
+
     using EnvDTE;
+
     using EnvDTE80;
+
     using Microsoft.VisualStudio.Shell;
     using Microsoft.VisualStudio.Shell.Interop;
-    using Models;
-    using Services;
-    using ViewModels;
 
     /// <summary>
     /// This is the class that implements the package exposed by this assembly.
-    ///
+    /// 
     /// The minimum requirement for a class to be considered a valid package for Visual Studio
     /// is to implement the IVsPackage interface and register itself with the shell.
     /// This package uses the helper classes defined inside the Managed Package Framework (MPF)
@@ -27,8 +36,6 @@
     /// IVsPackage interface and uses the registration attributes defined in the framework to 
     /// register itself and its components with the shell.
     /// </summary>
-    // This attribute tells the PkgDef creation utility (CreatePkgDef.exe) that this class is
-    // a package.
     [PackageRegistration(UseManagedResourcesOnly = true)]
     // This attribute is used to register the informations needed to show the this package
     // in the Help/About dialog of Visual Studio.
@@ -41,7 +48,9 @@
     [Guid(GuidList.guidCaitlynPkgString)]
     public sealed class CaitlynPackage : Package
     {
+        #region Constructors
         /// <summary>
+        /// Initializes a new instance of the <see cref="CaitlynPackage"/> class. 
         /// Default constructor of the package.
         /// Inside this method you can place any initialization code that does not require 
         /// any Visual Studio service because at this point the package object is created but 
@@ -56,11 +65,11 @@
 
             Catel.Environment.BypassDevEnvCheck = true;
         }
+        #endregion
 
         /////////////////////////////////////////////////////////////////////////////
         // Overriden Package Implementation
-
-        #region Package Members
+        #region Methods
         /// <summary>
         /// Initialization of the package; this method is called right after the package is sited, so this is the place
         /// where you can put all the initilaization code that rely on services provided by VisualStudio.
@@ -76,7 +85,7 @@
 
             var vs = GetVisualStudio();
 
-            var serviceLocator = ServiceLocator.Instance;
+            var serviceLocator = ServiceLocator.Default;
             serviceLocator.RegisterInstance<DTE2>(vs);
             serviceLocator.RegisterType<IVisualStudioService, VisualStudioService>();
 
@@ -84,11 +93,11 @@
             serviceLocator.RegisterInstance<IAutoLinkerService>(new AutoLinkerService(vs));
 
             // Add our command handlers for menu (commands must exist in the .vsct file)
-            var mcs = GetService(typeof (IMenuCommandService)) as OleMenuCommandService;
+            var mcs = GetService(typeof(IMenuCommandService)) as OleMenuCommandService;
             if (null != mcs)
             {
                 // Link files
-                var linkProjectsMenuItemCommandId = new CommandID(GuidList.guidCaitlynCmdSet, (int) PkgCmdIDList.LinkFiles);
+                var linkProjectsMenuItemCommandId = new CommandID(GuidList.guidCaitlynCmdSet, (int)PkgCmdIDList.LinkFiles);
                 var linkProjectsMenuItem = new MenuCommand(OnLinkProjects, linkProjectsMenuItemCommandId);
                 mcs.AddCommand(linkProjectsMenuItem);
 
@@ -103,11 +112,16 @@
                 mcs.AddCommand(addRuleMenuItem);
             }
         }
-        #endregion
 
         /// <summary>
         /// Called when the link projects menu item is clicked.
         /// </summary>
+        /// <param name="sender">
+        /// The sender.
+        /// </param>
+        /// <param name="e">
+        /// The e.
+        /// </param>
         private void OnLinkProjects(object sender, EventArgs e)
         {
             if (!IsSolutionOpenend())
@@ -115,7 +129,7 @@
                 return;
             }
 
-            var serviceLocator = ServiceLocator.Instance;
+            var serviceLocator = ServiceLocator.Default;
             var uiVisualizerService = serviceLocator.ResolveType<IUIVisualizerService>();
             var configurationService = serviceLocator.ResolveType<IConfigurationService>();
 
@@ -129,9 +143,7 @@
                 pleaseWaitService.Show("Linking projects, please be patient");
 
                 var activeProject = vm.RootProject;
-                var projectsToLink = (from selectableProject in vm.SelectableProjects
-                                      where selectableProject.IsChecked
-                                      select selectableProject.Project).ToArray();
+                var projectsToLink = (from selectableProject in vm.SelectableProjects where selectableProject.IsChecked select selectableProject.Project).ToArray();
 
                 var linker = new Linker(activeProject, projectsToLink, configuration);
                 linker.RemoveMissingFiles = vm.RemoveMissingFiles;
@@ -144,6 +156,12 @@
         /// <summary>
         /// Called when the configuration menu item is clicked.
         /// </summary>
+        /// <param name="sender">
+        /// The sender.
+        /// </param>
+        /// <param name="e">
+        /// The e.
+        /// </param>
         private void OnConfiguration(object sender, EventArgs e)
         {
             if (!IsSolutionOpenend())
@@ -151,7 +169,7 @@
                 return;
             }
 
-            var serviceLocator = ServiceLocator.Instance;
+            var serviceLocator = ServiceLocator.Default;
             var uiVisualizerService = serviceLocator.ResolveType<IUIVisualizerService>();
             var configurationService = serviceLocator.ResolveType<IConfigurationService>();
 
@@ -167,6 +185,12 @@
         /// <summary>
         /// Called when the add rule menu item is clicked.
         /// </summary>
+        /// <param name="sender">
+        /// The sender.
+        /// </param>
+        /// <param name="e">
+        /// The e.
+        /// </param>
         private void OnAddRule(object sender, EventArgs e)
         {
             if (!IsSolutionOpenend())
@@ -174,7 +198,7 @@
                 return;
             }
 
-            var serviceLocator = ServiceLocator.Instance;
+            var serviceLocator = ServiceLocator.Default;
             var uiVisualizerService = serviceLocator.ResolveType<IUIVisualizerService>();
             var configurationService = serviceLocator.ResolveType<IConfigurationService>();
 
@@ -191,13 +215,15 @@
         /// Determines whether visual studio has currently a solution opened. If not, this method will show an error
         /// message to the user and return <c>false</c>. Otherwise it will return <c>true</c>.
         /// </summary>
-        /// <returns><c>true</c> if visual studio currently has a solution opened; otherwise, <c>false</c>.</returns>
+        /// <returns>
+        /// <c>true</c> if visual studio currently has a solution opened; otherwise, <c>false</c>.
+        /// </returns>
         private bool IsSolutionOpenend()
         {
             var dte = GetVisualStudio();
             if (!dte.IsSolutionOpened())
             {
-                var messageService = ServiceLocator.Instance.ResolveType<IMessageService>();
+                var messageService = ServiceLocator.Default.ResolveType<IMessageService>();
                 messageService.ShowError("This extension cannot be used without opening a solution first");
                 return false;
             }
@@ -208,12 +234,14 @@
         /// <summary>
         /// Gets the visual studio object.
         /// </summary>
-        /// <returns>The <see cref="DTE"/> representing visual studio.</returns>
+        /// <returns>
+        /// The <see cref="DTE"/> representing visual studio.
+        /// </returns>
         private DTE2 GetVisualStudio()
         {
-            //return System.Runtime.InteropServices.Marshal.GetActiveObject("VisualStudio.DTE.11.0") as DTE2;
-
-            return (DTE2)Package.GetGlobalService(typeof (SDTE));
+            // return System.Runtime.InteropServices.Marshal.GetActiveObject("VisualStudio.DTE.11.0") as DTE2;
+            return (DTE2)Package.GetGlobalService(typeof(SDTE));
         }
+        #endregion
     }
 }

@@ -1,17 +1,19 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="ProjectMappingViewModel.cs" company="Catel development team">
-//   Copyright (c) 2008 - 2012 Catel development team. All rights reserved.
+// <copyright file="ProjectMappingViewModel.cs" company="Caitlyn development team">
+//   Copyright (c) 2008 - 2013 Caitlyn development team. All rights reserved.
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
-
 namespace Caitlyn.ViewModels
 {
     using System.Collections.Generic;
+
+    using Caitlyn.Models;
+    using Caitlyn.Services;
+
     using Catel;
     using Catel.MVVM;
+
     using EnvDTE;
-    using Models;
-    using Services;
 
     /// <summary>
     /// ProjectMapping view model.
@@ -22,6 +24,9 @@ namespace Caitlyn.ViewModels
         /// <summary>
         /// Initializes a new instance of the <see cref="ProjectMappingViewModel"/> class.
         /// </summary>
+        /// <param name="projectMapping">
+        /// The project Mapping.
+        /// </param>
         public ProjectMappingViewModel(ProjectMapping projectMapping)
         {
             Argument.IsNotNull("projectMapping", projectMapping);
@@ -36,10 +41,15 @@ namespace Caitlyn.ViewModels
         /// <summary>
         /// Gets the title of the view model.
         /// </summary>
-        /// <value>The title.</value>
+        /// <value>
+        /// The title.
+        /// </value>
         public override string Title
         {
-            get { return "Project mapping"; }
+            get
+            {
+                return "Project mapping";
+            }
         }
 
         [Model]

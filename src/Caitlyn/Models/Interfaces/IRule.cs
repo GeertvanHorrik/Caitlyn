@@ -1,3 +1,8 @@
+// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="IRule.cs" company="Caitlyn development team">
+//   Copyright (c) 2008 - 2013 Caitlyn development team. All rights reserved.
+// </copyright>
+// --------------------------------------------------------------------------------------------------------------------
 namespace Caitlyn.Models
 {
     using System.Collections.ObjectModel;
@@ -11,7 +16,7 @@ namespace Caitlyn.Models
         /// <summary>
         /// Rule that the item should not be added to the specified target projects.
         /// </summary>
-        DoNotAdd,
+        DoNotAdd, 
 
         /// <summary>
         /// Rule that the item should not be removed from the specified target projects.
@@ -21,6 +26,7 @@ namespace Caitlyn.Models
 
     public interface IRule
     {
+        #region Properties
         /// <summary>
         /// Gets or sets the name.
         /// </summary>
@@ -30,13 +36,17 @@ namespace Caitlyn.Models
         /// <summary>
         /// Gets or sets the rule type.
         /// </summary>
-        /// <value>The rule type.</value>
-        /// <remarks></remarks>
+        /// <value>
+        /// The rule type.
+        /// </value>
+        /// <remarks>
+        /// </remarks>
         RuleType Type { get; set; }
 
         /// <summary>
         /// Gets or sets the list of project types to ignore the item for.
         /// </summary>
         ObservableCollection<ProjectType> ProjectTypes { get; set; }
+        #endregion
     }
 }

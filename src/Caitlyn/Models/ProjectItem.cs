@@ -1,31 +1,38 @@
-﻿namespace Caitlyn.Models
+﻿// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="ProjectItem.cs" company="Caitlyn development team">
+//   Copyright (c) 2008 - 2013 Caitlyn development team. All rights reserved.
+// </copyright>
+// --------------------------------------------------------------------------------------------------------------------
+namespace Caitlyn.Models
 {
     using System;
     using System.Collections.ObjectModel;
     using System.IO;
     using System.Runtime.Serialization;
+
     using Catel;
     using Catel.Data;
+
+    using EnvDTE;
 
     /// <summary>
     /// ProjectItem Data object class which fully supports serialization, property changed notifications,
     /// backwards compatibility and error checking.
     /// </summary>
-#if !SILVERLIGHT
     [Serializable]
-#endif
-    public class ProjectItem : DataObjectBase<ProjectItem>, IProjectItem
+    public class ProjectItem : ModelBase, IProjectItem
     {
-        #region Variables
-        #endregion
-
         #region Constructor & destructor
         /// <summary>
         /// Initializes a new instance of the <see cref="ProjectItem"/> class.
         /// </summary>
-        /// <param name="project">The project.</param>
-        /// <exception cref="ArgumentNullException">The <paramref name="project"/> is <c>null</c>.</exception>
-        public ProjectItem(EnvDTE.Project project)
+        /// <param name="project">
+        /// The project.
+        /// </param>
+        /// <exception cref="ArgumentNullException">
+        /// The <paramref name="project"/> is <c>null</c>.
+        /// </exception>
+        public ProjectItem(Project project)
         {
             Argument.IsNotNull("project", project);
 
@@ -40,9 +47,15 @@
         /// <summary>
         /// Initializes a new instance of the <see cref="ProjectItem"/> class.
         /// </summary>
-        /// <param name="projectItem">The project item.</param>
-        /// <param name="parent">The parent. Can be <c>null</c> when this item represents the root.</param>
-        /// <exception cref="ArgumentNullException">The <paramref name="projectItem"/> is <c>null</c>.</exception>
+        /// <param name="projectItem">
+        /// The project item.
+        /// </param>
+        /// <param name="parent">
+        /// The parent. Can be <c>null</c> when this item represents the root.
+        /// </param>
+        /// <exception cref="ArgumentNullException">
+        /// The <paramref name="projectItem"/> is <c>null</c>.
+        /// </exception>
         public ProjectItem(EnvDTE.ProjectItem projectItem, IProjectItem parent = null)
         {
             Argument.IsNotNull("projectItem", projectItem);
@@ -56,12 +69,21 @@
         }
 
         /// <summary>
+        /// Initializes a new instance of the <see cref="ProjectItem"/> class. 
         /// Initializes a new object from scratch.
         /// </summary>
-        /// <param name="name">The name.</param>
-        /// <param name="projectItemType">Type of the project item.</param>
-        /// <param name="parent">The parent. Can be <c>null</c> when this item represents the root.</param>
-        /// <exception cref="ArgumentException">The <paramref name="name"/> is <c>null</c> or whitespace.</exception>
+        /// <param name="name">
+        /// The name.
+        /// </param>
+        /// <param name="projectItemType">
+        /// Type of the project item.
+        /// </param>
+        /// <param name="parent">
+        /// The parent. Can be <c>null</c> when this item represents the root.
+        /// </param>
+        /// <exception cref="ArgumentException">
+        /// The <paramref name="name"/> is <c>null</c> or whitespace.
+        /// </exception>
         public ProjectItem(string name, ProjectItemType projectItemType, IProjectItem parent = null)
         {
             Argument.IsNotNullOrWhitespace("name", name);
@@ -71,12 +93,19 @@
 
 #if !SILVERLIGHT
         /// <summary>
+        /// Initializes a new instance of the <see cref="ProjectItem"/> class. 
         /// Initializes a new object based on <see cref="SerializationInfo"/>.
         /// </summary>
-        /// <param name="info"><see cref="SerializationInfo"/> that contains the information.</param>
-        /// <param name="context"><see cref="StreamingContext"/>.</param>
+        /// <param name="info">
+        /// <see cref="SerializationInfo"/> that contains the information.
+        /// </param>
+        /// <param name="context">
+        /// <see cref="StreamingContext"/>.
+        /// </param>
         protected ProjectItem(SerializationInfo info, StreamingContext context)
-            : base(info, context) { }
+            : base(info, context)
+        {
+        }
 #endif
         #endregion
 
@@ -86,8 +115,14 @@
         /// </summary>
         public IProjectItem Parent
         {
-            get { return GetValue<IProjectItem>(ParentProperty); }
-            private set { SetValue(ParentProperty, value); }
+            get
+            {
+                return GetValue<IProjectItem>(ParentProperty);
+            }
+            private set
+            {
+                SetValue(ParentProperty, value);
+            }
         }
 
         /// <summary>
@@ -100,8 +135,14 @@
         /// </summary>
         public string Name
         {
-            get { return GetValue<string>(NameProperty); }
-            private set { SetValue(NameProperty, value); }
+            get
+            {
+                return GetValue<string>(NameProperty);
+            }
+            private set
+            {
+                SetValue(NameProperty, value);
+            }
         }
 
         /// <summary>
@@ -114,8 +155,14 @@
         /// </summary>
         public ProjectItemType Type
         {
-            get { return GetValue<ProjectItemType>(TypeProperty); }
-            private set { SetValue(TypeProperty, value); }
+            get
+            {
+                return GetValue<ProjectItemType>(TypeProperty);
+            }
+            private set
+            {
+                SetValue(TypeProperty, value);
+            }
         }
 
         /// <summary>
@@ -128,8 +175,14 @@
         /// </summary>
         public ObservableCollection<IProjectItem> ProjectItems
         {
-            get { return GetValue<ObservableCollection<IProjectItem>>(ProjectItemsProperty); }
-            private set { SetValue(ProjectItemsProperty, value); }
+            get
+            {
+                return GetValue<ObservableCollection<IProjectItem>>(ProjectItemsProperty);
+            }
+            private set
+            {
+                SetValue(ProjectItemsProperty, value);
+            }
         }
 
         /// <summary>
@@ -158,10 +211,18 @@
         /// <summary>
         /// Initializes the current project item.
         /// </summary>
-        /// <param name="name">The name. Can only be whitespace when the <paramref name="parent"/> is <c>null</c>.</param>
-        /// <param name="projectItemType">Type of the project item.</param>
-        /// <param name="parent">The parent.</param>
-        /// <exception cref="ArgumentException">The <paramref name="name"/> is <c>null</c> or whitespace.</exception>
+        /// <param name="name">
+        /// The name. Can only be whitespace when the <paramref name="parent"/> is <c>null</c>.
+        /// </param>
+        /// <param name="projectItemType">
+        /// Type of the project item.
+        /// </param>
+        /// <param name="parent">
+        /// The parent.
+        /// </param>
+        /// <exception cref="ArgumentException">
+        /// The <paramref name="name"/> is <c>null</c> or whitespace.
+        /// </exception>
         private void Initialize(string name, ProjectItemType projectItemType, IProjectItem parent = null)
         {
             if (parent == null)

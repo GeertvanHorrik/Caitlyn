@@ -1,30 +1,26 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="ProjectMapping.cs" company="Catel development team">
-//   Copyright (c) 2008 - 2012 Catel development team. All rights reserved.
+// <copyright file="ProjectMapping.cs" company="Caitlyn development team">
+//   Copyright (c) 2008 - 2013 Caitlyn development team. All rights reserved.
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
-
 namespace Caitlyn.Models
 {
     using System;
     using System.Collections.Generic;
     using System.Runtime.Serialization;
+
     using Catel.Data;
 
     /// <summary>
     /// ProjectMapping Data object class which fully supports serialization, property changed notifications,
     /// backwards compatibility and error checking.
     /// </summary>
-#if !SILVERLIGHT
     [Serializable]
-#endif
-    public class ProjectMapping : DataObjectBase<ProjectMapping>
+    public class ProjectMapping : ModelBase
     {
-        #region Fields
-        #endregion
-
         #region Constructors
         /// <summary>
+        /// Initializes a new instance of the <see cref="ProjectMapping"/> class. 
         /// Initializes a new object from scratch.
         /// </summary>
         public ProjectMapping()
@@ -33,10 +29,15 @@ namespace Caitlyn.Models
 
 #if !SILVERLIGHT
         /// <summary>
+        /// Initializes a new instance of the <see cref="ProjectMapping"/> class. 
         /// Initializes a new object based on <see cref="SerializationInfo"/>.
         /// </summary>
-        /// <param name="info"><see cref="SerializationInfo"/> that contains the information.</param>
-        /// <param name="context"><see cref="StreamingContext"/>.</param>
+        /// <param name="info">
+        /// <see cref="SerializationInfo"/> that contains the information.
+        /// </param>
+        /// <param name="context">
+        /// <see cref="StreamingContext"/>.
+        /// </param>
         protected ProjectMapping(SerializationInfo info, StreamingContext context)
             : base(info, context)
         {
@@ -50,8 +51,14 @@ namespace Caitlyn.Models
         /// </summary>
         public string SourceProject
         {
-            get { return GetValue<string>(SourceProjectProperty); }
-            set { SetValue(SourceProjectProperty, value); }
+            get
+            {
+                return GetValue<string>(SourceProjectProperty);
+            }
+            set
+            {
+                SetValue(SourceProjectProperty, value);
+            }
         }
 
         /// <summary>
@@ -64,8 +71,14 @@ namespace Caitlyn.Models
         /// </summary>
         public string TargetProject
         {
-            get { return GetValue<string>(TargetProjectProperty); }
-            set { SetValue(TargetProjectProperty, value); }
+            get
+            {
+                return GetValue<string>(TargetProjectProperty);
+            }
+            set
+            {
+                SetValue(TargetProjectProperty, value);
+            }
         }
 
         /// <summary>

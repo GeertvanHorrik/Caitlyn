@@ -1,26 +1,34 @@
-﻿namespace Caitlyn.ViewModels
+﻿// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="ConfigurationViewModel.cs" company="Caitlyn development team">
+//   Copyright (c) 2008 - 2013 Caitlyn development team. All rights reserved.
+// </copyright>
+// --------------------------------------------------------------------------------------------------------------------
+namespace Caitlyn.ViewModels
 {
     using System;
     using System.Collections.ObjectModel;
+
+    using Caitlyn.Models;
+
     using Catel;
-    using Catel.Data;
     using Catel.MVVM;
     using Catel.MVVM.Services;
-    using Models;
 
     /// <summary>
     /// Configuration view model.
     /// </summary>
     public class ConfigurationViewModel : ViewModelBase
     {
-        #region Variables
-        #endregion
-
         #region Constructor & destructor
         /// <summary>
         /// Initializes a new instance of the <see cref="ConfigurationViewModel"/> class.
         /// </summary>
-        /// <exception cref="ArgumentNullException">The <paramref name="configuration"/> is <c>null</c>.</exception>
+        /// <param name="configuration">
+        /// The configuration.
+        /// </param>
+        /// <exception cref="ArgumentNullException">
+        /// The <paramref name="configuration"/> is <c>null</c>.
+        /// </exception>
         public ConfigurationViewModel(Configuration configuration)
         {
             Argument.IsNotNull("configuration", configuration);
@@ -38,10 +46,15 @@
         /// <summary>
         /// Gets the title of the view model.
         /// </summary>
-        /// <value>The title.</value>
+        /// <value>
+        /// The title.
+        /// </value>
         public override string Title
         {
-            get { return "Modify configuration"; }
+            get
+            {
+                return "Modify configuration";
+            }
         }
 
         /// <summary>
@@ -66,11 +79,30 @@
         #endregion
 
         #region Commands
+
+        #region Properties
         /// <summary>
         /// Gets the Add command.
         /// </summary>
         public Command Add { get; private set; }
 
+        /// <summary>
+        /// Gets the Edit command.
+        /// </summary>
+        public Command Edit { get; private set; }
+
+        /// <summary>
+        /// Gets the Remove command.
+        /// </summary>
+        public Command Remove { get; private set; }
+
+        /// <summary>
+        /// Gets the ManageProjectMappings command.
+        /// </summary>
+        public Command ManageProjectMappings { get; private set; }
+        #endregion
+
+        #region Methods
         /// <summary>
         /// Method to invoke when the Add command is executed.
         /// </summary>
@@ -88,14 +120,11 @@
         }
 
         /// <summary>
-        /// Gets the Edit command.
-        /// </summary>
-        public Command Edit { get; private set; }
-
-        /// <summary>
         /// Method to check whether the Edit command can be executed.
         /// </summary>
-        /// <returns><c>true</c> if the command can be executed; otherwise <c>false</c></returns>
+        /// <returns>
+        /// <c>true</c> if the command can be executed; otherwise <c>false</c>.
+        /// </returns>
         private bool OnEditCanExecute()
         {
             return SelectedRootProject != null;
@@ -114,14 +143,11 @@
         }
 
         /// <summary>
-        /// Gets the Remove command.
-        /// </summary>
-        public Command Remove { get; private set; }
-
-        /// <summary>
         /// Method to check whether the Remove command can be executed.
         /// </summary>
-        /// <returns><c>true</c> if the command can be executed; otherwise <c>false</c></returns>
+        /// <returns>
+        /// <c>true</c> if the command can be executed; otherwise <c>false</c>.
+        /// </returns>
         private bool OnRemoveCanExecute()
         {
             return SelectedRootProject != null;
@@ -141,11 +167,6 @@
         }
 
         /// <summary>
-        /// Gets the ManageProjectMappings command.
-        /// </summary>
-        public Command ManageProjectMappings { get; private set; }
-
-        /// <summary>
         /// Method to invoke when the ManageProjectMappings command is executed.
         /// </summary>
         private void OnManageProjectMappingsExecute()
@@ -156,7 +177,6 @@
         }
         #endregion
 
-        #region Methods
         #endregion
     }
 }

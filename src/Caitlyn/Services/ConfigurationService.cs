@@ -1,22 +1,25 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="ConfigurationService.cs" company="Catel development team">
-//   Copyright (c) 2008 - 2012 Catel development team. All rights reserved.
+// <copyright file="ConfigurationService.cs" company="Caitlyn development team">
+//   Copyright (c) 2008 - 2013 Caitlyn development team. All rights reserved.
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
-
 namespace Caitlyn.Services
 {
+    using Caitlyn.Models;
+
     using Catel;
-    using EnvDTE;
+
     using EnvDTE80;
-    using Models;
-    using Configuration = Models.Configuration;
 
     public class ConfigurationService : IConfigurationService
     {
+        #region Fields
         private readonly DTE2 _visualStudio;
-        private Configuration _currentConfiguration;
 
+        private Configuration _currentConfiguration;
+        #endregion
+
+        #region Constructors
         public ConfigurationService(DTE2 visualStudio)
         {
             Argument.IsNotNull("visualStudio", visualStudio);
@@ -28,17 +31,9 @@ namespace Caitlyn.Services
             _visualStudio.Events.SolutionEvents.Opened += OnSolutionOpened;
             _visualStudio.Events.SolutionEvents.AfterClosing += OnSolutionClosed;
         }
+        #endregion
 
-        private void OnSolutionOpened()
-        {
-            LoadConfigurationForCurrentSolution();
-        }
-
-        private void OnSolutionClosed()
-        {
-            _currentConfiguration = null;
-        }
-
+        #region IConfigurationService Members
         public Configuration LoadConfigurationForCurrentSolution()
         {
             if (_currentConfiguration == null)
@@ -64,5 +59,18 @@ namespace Caitlyn.Services
                 }
             }
         }
+        #endregion
+
+        #region Methods
+        private void OnSolutionOpened()
+        {
+            LoadConfigurationForCurrentSolution();
+        }
+
+        private void OnSolutionClosed()
+        {
+            _currentConfiguration = null;
+        }
+        #endregion
     }
 }

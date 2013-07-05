@@ -1,16 +1,18 @@
 // --------------------------------------------------------------------------------------------------------------------
-// <copyright file="IConfigurationService.cs" company="Catel development team">
-//   Copyright (c) 2008 - 2012 Catel development team. All rights reserved.
+// <copyright file="IConfigurationService.cs" company="Caitlyn development team">
+//   Copyright (c) 2008 - 2013 Caitlyn development team. All rights reserved.
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
-
 namespace Caitlyn.Services
 {
-    using Models;
+    using Caitlyn.Models;
 
     public interface IConfigurationService
     {
+        #region Methods
         Configuration LoadConfigurationForCurrentSolution();
+
         void SaveConfigurationForCurrentSolution();
+        #endregion
     }
 }

@@ -1,14 +1,15 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="ConfigurationView.xaml.cs" company="Catel development team">
-//   Copyright (c) 2008 - 2012 Catel development team. All rights reserved.
+// <copyright file="ConfigurationView.xaml.cs" company="Caitlyn development team">
+//   Copyright (c) 2008 - 2013 Caitlyn development team. All rights reserved.
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
-
 namespace Caitlyn.Views
 {
     using System.Windows;
+
+    using Caitlyn.ViewModels;
+
     using Catel.Windows;
-    using ViewModels;
 
     /// <summary>
     /// Interaction logic for ConfigurationView.xaml.
@@ -27,6 +28,9 @@ namespace Caitlyn.Views
         /// <summary>
         /// Initializes a new instance of the <see cref="ConfigurationView"/> class.
         /// </summary>
+        /// <param name="viewModel">
+        /// The view Model.
+        /// </param>
         /// <remarks>
         /// This constructor can be used to use view-model injection.
         /// </remarks>

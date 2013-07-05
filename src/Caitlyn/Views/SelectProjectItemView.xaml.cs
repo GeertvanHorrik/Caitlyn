@@ -1,15 +1,16 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="SelectProjectItemView.xaml.cs" company="Catel development team">
-//   Copyright (c) 2008 - 2012 Catel development team. All rights reserved.
+// <copyright file="SelectProjectItemView.xaml.cs" company="Caitlyn development team">
+//   Copyright (c) 2008 - 2013 Caitlyn development team. All rights reserved.
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
-
 namespace Caitlyn.Views
 {
     using System.Windows;
     using System.Windows.Controls;
+
+    using Caitlyn.ViewModels;
+
     using Catel.Windows;
-    using ViewModels;
 
     /// <summary>
     /// Interaction logic for SelectProjectItemView.xaml.
@@ -28,6 +29,9 @@ namespace Caitlyn.Views
         /// <summary>
         /// Initializes a new instance of the <see cref="SelectProjectItemView"/> class.
         /// </summary>
+        /// <param name="viewModel">
+        /// The view Model.
+        /// </param>
         /// <remarks>
         /// This constructor can be used to use view-model injection.
         /// </remarks>
@@ -44,11 +48,15 @@ namespace Caitlyn.Views
         /// <summary>
         /// Called when the selection on the tree view changes.
         /// </summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The event args.</param>
+        /// <param name="sender">
+        /// The sender.
+        /// </param>
+        /// <param name="e">
+        /// The event args.
+        /// </param>
         private void OnTreeViewSelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
         {
-            var treeView = (TreeView) sender;
+            var treeView = (TreeView)sender;
 
             var viewModel = ViewModel as SelectProjectItemViewModel;
             if (viewModel != null)

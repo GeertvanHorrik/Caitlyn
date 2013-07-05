@@ -1,18 +1,26 @@
-﻿namespace Caitlyn.Converters
+﻿// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="ProjectItemTypeToImageSourceConverter.cs" company="Caitlyn development team">
+//   Copyright (c) 2008 - 2013 Caitlyn development team. All rights reserved.
+// </copyright>
+// --------------------------------------------------------------------------------------------------------------------
+namespace Caitlyn.Converters
 {
     using System;
     using System.Globalization;
     using System.Windows.Data;
+
+    using Caitlyn.Models;
+
     using Catel.Windows.Data.Converters;
-    using Models;
 
     public class ProjectItemTypeToImageSourceConverter : IValueConverter
     {
+        #region IValueConverter Members
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             if (value is ProjectItemType)
             {
-                var projectItemType = (ProjectItemType) value;
+                var projectItemType = (ProjectItemType)value;
                 switch (projectItemType)
                 {
                     case ProjectItemType.Folder:
@@ -33,5 +41,6 @@
         {
             return ConverterHelper.DoNothingBindingValue;
         }
+        #endregion
     }
 }

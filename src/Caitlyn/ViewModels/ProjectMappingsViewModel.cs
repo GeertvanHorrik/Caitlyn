@@ -1,16 +1,17 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="ProjectMappingsViewModel.cs" company="Catel development team">
-//   Copyright (c) 2008 - 2012 Catel development team. All rights reserved.
+// <copyright file="ProjectMappingsViewModel.cs" company="Caitlyn development team">
+//   Copyright (c) 2008 - 2013 Caitlyn development team. All rights reserved.
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
-
 namespace Caitlyn.ViewModels
 {
     using System.Collections.ObjectModel;
+
+    using Caitlyn.Models;
+
     using Catel;
     using Catel.MVVM;
     using Catel.MVVM.Services;
-    using Models;
 
     /// <summary>
     /// ProjectMappings view model.
@@ -21,6 +22,9 @@ namespace Caitlyn.ViewModels
         /// <summary>
         /// Initializes a new instance of the <see cref="ProjectMappingsViewModel"/> class.
         /// </summary>
+        /// <param name="configuration">
+        /// The configuration.
+        /// </param>
         public ProjectMappingsViewModel(Configuration configuration)
         {
             Argument.IsNotNull("configuration", configuration);
@@ -37,10 +41,15 @@ namespace Caitlyn.ViewModels
         /// <summary>
         /// Gets the title of the view model.
         /// </summary>
-        /// <value>The title.</value>
+        /// <value>
+        /// The title.
+        /// </value>
         public override string Title
         {
-            get { return "Project mappings"; }
+            get
+            {
+                return "Project mappings";
+            }
         }
 
         public ObservableCollection<ProjectMapping> ProjectMappings { get; private set; }
@@ -49,11 +58,25 @@ namespace Caitlyn.ViewModels
         #endregion
 
         #region Commands
+
+        #region Properties
         /// <summary>
         /// Gets the Add command.
         /// </summary>
         public Command Add { get; private set; }
 
+        /// <summary>
+        /// Gets the Edit command.
+        /// </summary>
+        public Command Edit { get; private set; }
+
+        /// <summary>
+        /// Gets the Remove command.
+        /// </summary>
+        public Command Remove { get; private set; }
+        #endregion
+
+        #region Methods
         /// <summary>
         /// Method to invoke when the Add command is executed.
         /// </summary>
@@ -71,14 +94,11 @@ namespace Caitlyn.ViewModels
         }
 
         /// <summary>
-        /// Gets the Edit command.
-        /// </summary>
-        public Command Edit { get; private set; }
-
-        /// <summary>
         /// Method to check whether the Edit command can be executed.
         /// </summary>
-        /// <returns><c>true</c> if the command can be executed; otherwise <c>false</c></returns>
+        /// <returns>
+        /// <c>true</c> if the command can be executed; otherwise <c>false</c>.
+        /// </returns>
         private bool OnEditCanExecute()
         {
             return SelectedProjectMapping != null;
@@ -97,14 +117,11 @@ namespace Caitlyn.ViewModels
         }
 
         /// <summary>
-        /// Gets the Remove command.
-        /// </summary>
-        public Command Remove { get; private set; }
-
-        /// <summary>
         /// Method to check whether the Remove command can be executed.
         /// </summary>
-        /// <returns><c>true</c> if the command can be executed; otherwise <c>false</c></returns>
+        /// <returns>
+        /// <c>true</c> if the command can be executed; otherwise <c>false</c>.
+        /// </returns>
         private bool OnRemoveCanExecute()
         {
             return SelectedProjectMapping != null;
@@ -122,6 +139,8 @@ namespace Caitlyn.ViewModels
                 SelectedProjectMapping = null;
             }
         }
+        #endregion
+
         #endregion
     }
 }

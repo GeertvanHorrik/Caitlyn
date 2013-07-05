@@ -1,27 +1,34 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="AutoLinkerService.cs" company="Catel development team">
-//   Copyright (c) 2008 - 2012 Catel development team. All rights reserved.
+// <copyright file="AutoLinkerService.cs" company="Caitlyn development team">
+//   Copyright (c) 2008 - 2013 Caitlyn development team. All rights reserved.
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
-
 namespace Caitlyn.Services
 {
     using System;
-    using System.IO;
     using System.Linq;
+
     using Catel;
+
     using EnvDTE;
+
     using EnvDTE80;
 
     public class AutoLinkerService : Catel.MVVM.Services.ViewModelServiceBase, IAutoLinkerService
     {
-        private readonly DTE2 _visualStudio;
-        private readonly SolutionEvents _solutionEvents;
-        private readonly ProjectItemsEvents _solutionItemsEvents;
+        #region Fields
         private readonly ProjectItemsEvents _projectItemsEvents;
 
-        private bool _isSolutionLoaded;
+        private readonly SolutionEvents _solutionEvents;
 
+        private readonly ProjectItemsEvents _solutionItemsEvents;
+
+        private readonly DTE2 _visualStudio;
+
+        private bool _isSolutionLoaded;
+        #endregion
+
+        #region Constructors
         public AutoLinkerService(DTE2 visualStudio)
         {
             Argument.IsNotNull("visualStudio", visualStudio);
@@ -44,7 +51,9 @@ namespace Caitlyn.Services
             _projectItemsEvents.ItemRemoved += OnSolutionItemRemoved;
             _projectItemsEvents.ItemRenamed += OnSolutionItemRenamed;
         }
+        #endregion
 
+        #region Methods
         private void OnSolutionOpened()
         {
             _isSolutionLoaded = true;
@@ -87,14 +96,13 @@ namespace Caitlyn.Services
 
                 var sourceProject = projectItem.ContainingProject;
                 var sourceProjectName = sourceProject.Name;
-                var projectsToLink = (from projectMapping in configuration.ProjectMappings
-                                      where string.Equals(projectMapping.SourceProject, sourceProjectName, StringComparison.OrdinalIgnoreCase)
-                                      select visualStudioService.GetProjectByName(projectMapping.TargetProject)).ToArray();
+                var projectsToLink = (from projectMapping in configuration.ProjectMappings where string.Equals(projectMapping.SourceProject, sourceProjectName, StringComparison.OrdinalIgnoreCase) select visualStudioService.GetProjectByName(projectMapping.TargetProject)).ToArray();
 
                 var linker = new Linker(sourceProject, projectsToLink, configuration);
                 linker.RemoveMissingFiles = true;
                 linker.HandleProjectItemChange(projectItem, action, oldName);
             }
         }
+        #endregion
     }
 }

@@ -1,32 +1,63 @@
-﻿namespace Caitlyn
+﻿// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="LinkerHelper.cs" company="Caitlyn development team">
+//   Copyright (c) 2008 - 2013 Caitlyn development team. All rights reserved.
+// </copyright>
+// --------------------------------------------------------------------------------------------------------------------
+namespace Caitlyn
 {
     using System;
     using System.Collections.Generic;
     using System.Linq;
+
     using Catel;
+
     using EnvDTE;
 
     public static class LinkerHelper
     {
+        #region Methods
         /// <summary>
         /// Gets the related projects of the specified project. For example, when a project
         /// with the name <c>Catel.Core.NET35</c> is used, the following values will be
         /// returned:
         /// <list type="bullet">
-        /// 		<item><description>Catel.Core.NET40</description></item>
-        /// 		<item><description>Catel.Core.NET45</description></item>
-        /// 		<item><description>Catel.Core.SL4</description></item>
-        /// 		<item><description>Catel.Core.SL5</description></item>
-        /// 		<item><description>Catel.Core.WP7</description></item>
-        /// 		<item><description>Catel.Core.WinRT</description></item>
-        /// 	</list>
+        /// <item>
+        /// <description>Catel.Core.NET40.</description>
+        /// </item>
+        /// <item>
+        /// <description>Catel.Core.NET45.</description>
+        /// </item>
+        /// <item>
+        /// <description>Catel.Core.SL4.</description>
+        /// </item>
+        /// <item>
+        /// <description>Catel.Core.SL5.</description>
+        /// </item>
+        /// <item>
+        /// <description>Catel.Core.WP7.</description>
+        /// </item>
+        /// <item>
+        /// <description>Catel.Core.WIN80.</description>
+        /// </item>
+        /// </list>
+        /// .
         /// </summary>
-        /// <param name="rootProject">The root project.</param>
-        /// <param name="smartFallDown">if set to <c>true</c>, only "lower" projects will be returned.</param>
-        /// <returns>The list of linked projects.</returns>
-        /// <exception cref="ArgumentNullException">The <paramref name="rootProject"/> is <c>null</c>.</exception>
-        /// <remarks>Note that the <paramref name="rootProject"/> itself will not be included in the list
-        /// of linked projects.</remarks>
+        /// <param name="rootProject">
+        /// The root project.
+        /// </param>
+        /// <param name="smartFallDown">
+        /// If set to <c>true</c>, only "lower" projects will be returned.
+        /// </param>
+        /// <returns>
+        /// The list of linked projects.
+        /// </returns>
+        /// <exception cref="ArgumentNullException">
+        /// The <paramref name="rootProject"/> is <c>null</c>.
+        /// </exception>
+        /// <remarks>
+        /// Note that the <paramref name="rootProject"/> itself will not be included in the list
+        /// of linked projects.
+        /// </remarks>
         public static Project[] GetRelatedProjects(this Project rootProject, bool smartFallDown = true)
         {
             Argument.IsNotNull("rootProject", rootProject);
@@ -62,7 +93,7 @@
                         if ((int)linkedProjectType > (int)rootProjectType)
                         {
                             linkedProjects.Add(project);
-                        }                        
+                        }
                     }
                     else
                     {
@@ -78,9 +109,15 @@
         /// Strips all possible project targets from the name. For example when a name of a project
         /// is <c>Catel.Core.NET35</c>, this method will return <c>Catel.Core</c>.
         /// </summary>
-        /// <param name="name">The name.</param>
-        /// <returns>The project name without the project target.</returns>
-        /// <exception cref="ArgumentException">The <paramref name="name"/> is <c>null</c> or whitespace.</exception>
+        /// <param name="name">
+        /// The name.
+        /// </param>
+        /// <returns>
+        /// The project name without the project target.
+        /// </returns>
+        /// <exception cref="ArgumentException">
+        /// The <paramref name="name"/> is <c>null</c> or whitespace.
+        /// </exception>
         public static string StripAllPossibleProjectTargets(string name)
         {
             Argument.IsNotNullOrWhitespace("name", name);
@@ -104,11 +141,21 @@
         /// Determines whether the specified project item is an actual file in the specified project. A file is considered
         /// an actual file when it is a physical, thus not linked, file in the project.
         /// </summary>
-        /// <param name="item">The item.</param>
-        /// <param name="project">The project.</param>
-        /// <returns><c>true</c> if the item is an actual file in the specified project; otherwise, <c>false</c>.</returns>
-        /// <exception cref="ArgumentNullException">The <paramref name="item"/> is <c>null</c>.</exception>
-        /// <exception cref="ArgumentNullException">The <paramref name="project"/> is <c>null</c>.</exception>
+        /// <param name="item">
+        /// The item.
+        /// </param>
+        /// <param name="project">
+        /// The project.
+        /// </param>
+        /// <returns>
+        /// <c>true</c> if the item is an actual file in the specified project; otherwise, <c>false</c>.
+        /// </returns>
+        /// <exception cref="ArgumentNullException">
+        /// The <paramref name="item"/> is <c>null</c>.
+        /// </exception>
+        /// <exception cref="ArgumentNullException">
+        /// The <paramref name="project"/> is <c>null</c>.
+        /// </exception>
         public static bool IsActualFileInProject(this ProjectItem item, Project project)
         {
             Argument.IsNotNull("item", item);
@@ -122,11 +169,21 @@
         /// Determines whether the specified project item is an actual file in one of the specified projects. A file is considered
         /// an actual file when it is a physical, thus not linked, file in the project.
         /// </summary>
-        /// <param name="item">The item.</param>
-        /// <param name="relatedProjects">The related projects.</param>
-        /// <returns><c>true</c> if the item is an actual file in one of the specified projects; otherwise, <c>false</c>.</returns>
-        /// <exception cref="ArgumentNullException">The <paramref name="item"/> is <c>null</c>.</exception>
-        /// <exception cref="ArgumentNullException">The <paramref name="relatedProjects"/> is <c>null</c>.</exception>
+        /// <param name="item">
+        /// The item.
+        /// </param>
+        /// <param name="relatedProjects">
+        /// The related projects.
+        /// </param>
+        /// <returns>
+        /// <c>true</c> if the item is an actual file in one of the specified projects; otherwise, <c>false</c>.
+        /// </returns>
+        /// <exception cref="ArgumentNullException">
+        /// The <paramref name="item"/> is <c>null</c>.
+        /// </exception>
+        /// <exception cref="ArgumentNullException">
+        /// The <paramref name="relatedProjects"/> is <c>null</c>.
+        /// </exception>
         public static bool IsActualFileInAnyRelatedProject(this ProjectItem item, Project[] relatedProjects)
         {
             Argument.IsNotNull("item", item);
@@ -146,10 +203,18 @@
         /// <summary>
         /// Gets the project item by its name relative to the project root.
         /// </summary>
-        /// <param name="projectItems">The project items.</param>
-        /// <param name="relativeName">Name of the item to find, relative to the project root.</param>
-        /// <param name="fullItemName">Full name of the item. Can be <c>null</c>, but if it is entered, it will be checked as well.</param>
-        /// <returns>The <see cref="ProjectItem"/> or <c>null</c> if not found.</returns>
+        /// <param name="projectItems">
+        /// The project items.
+        /// </param>
+        /// <param name="relativeName">
+        /// Name of the item to find, relative to the project root.
+        /// </param>
+        /// <param name="fullItemName">
+        /// Full name of the item. Can be <c>null</c>, but if it is entered, it will be checked as well.
+        /// </param>
+        /// <returns>
+        /// The <see cref="ProjectItem"/> or <c>null</c> if not found.
+        /// </returns>
         public static ProjectItem GetProjectItem(this ProjectItems projectItems, string relativeName, string fullItemName = null)
         {
             Argument.IsNotNull("projectItems", projectItems);
@@ -193,11 +258,21 @@
         /// <summary>
         /// Gets the name of the target file by replace the source directory by the target directory.
         /// </summary>
-        /// <param name="source">The source.</param>
-        /// <param name="targetProject">The target project.</param>
-        /// <returns>The target file name based on the source file name.</returns>
-        /// <exception cref="ArgumentNullException">The <paramref name="source"/> is <c>null</c>.</exception>
-        /// <exception cref="ArgumentNullException">The <paramref name="targetProject"/> is <c>null</c>.</exception>
+        /// <param name="source">
+        /// The source.
+        /// </param>
+        /// <param name="targetProject">
+        /// The target project.
+        /// </param>
+        /// <returns>
+        /// The target file name based on the source file name.
+        /// </returns>
+        /// <exception cref="ArgumentNullException">
+        /// The <paramref name="source"/> is <c>null</c>.
+        /// </exception>
+        /// <exception cref="ArgumentNullException">
+        /// The <paramref name="targetProject"/> is <c>null</c>.
+        /// </exception>
         public static string GetTargetFileName(this ProjectItem source, Project targetProject)
         {
             Argument.IsNotNull("source", source);
@@ -208,5 +283,6 @@
 
             return source.FileNames[0].Replace(sourceProjectDirectory, targetProjectDirectory);
         }
+        #endregion
     }
 }
