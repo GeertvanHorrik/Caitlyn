@@ -1,0 +1,35 @@
+﻿<catel:DataWindow x:Class="Caitlyn.Views.ProjectMappingView"
+                  xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+				  xmlns:catel="http://catel.codeplex.com">
+    
+    <!-- Resources -->
+    <catel:DataWindow.Resources>
+    </catel:DataWindow.Resources>
+
+    <!-- Content -->
+    <catel:StackGrid>
+		<catel:StackGrid.RowDefinitions>
+			<RowDefinition Height="Auto" />
+			<RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+		</catel:StackGrid.RowDefinitions>
+
+        <catel:StackGrid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="*" />
+        </catel:StackGrid.ColumnDefinitions>
+
+        <Label catel:StackGrid.ColumnSpan="2">
+            Select the source project and the target project for the automatic mapping.
+        </Label>
+        
+        <Label>Source project:</Label>
+        <ComboBox ItemsSource="{Binding AvailableProjects}" DisplayMemberPath="Name" SelectedValuePath="Name"
+                  SelectedValue="{Binding SourceProject, NotifyOnValidationError=True, ValidatesOnDataErrors=True}" />
+
+        <Label>Target project:</Label>
+        <ComboBox ItemsSource="{Binding AvailableProjects}" DisplayMemberPath="Name" SelectedValuePath="Name"
+                  SelectedValue="{Binding TargetProject, NotifyOnValidationError=True, ValidatesOnDataErrors=True}" />
+    </catel:StackGrid>
+</catel:DataWindow>

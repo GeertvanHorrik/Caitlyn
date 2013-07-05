@@ -1,0 +1,75 @@
+﻿<catel:DataWindow x:Class="Caitlyn.Views.ProjectMappingsView"
+                  xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+				  xmlns:catel="http://catel.codeplex.com"
+                  xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity">
+    
+    <!-- Resources -->
+    <catel:DataWindow.Resources>
+        <CollectionViewSource Source="{Binding ProjectMappings}" x:Key="ProjectMappingsCollectionViewSource">
+            <CollectionViewSource.GroupDescriptions>
+                <PropertyGroupDescription PropertyName="SourceProject" />
+            </CollectionViewSource.GroupDescriptions>
+        </CollectionViewSource>
+    </catel:DataWindow.Resources>
+
+    <!-- Content -->
+    <catel:StackGrid>
+		<catel:StackGrid.RowDefinitions>
+			<RowDefinition Height="Auto" />
+			<RowDefinition Height="Auto" />
+		</catel:StackGrid.RowDefinitions>
+
+        <Label>
+            Below you can manage the projects that should be linked automatically during development.
+        </Label>
+
+        <StackPanel>
+            <ScrollViewer ScrollViewer.VerticalScrollBarVisibility="Auto" MaxHeight="400">
+                <ListBox ItemsSource="{Binding Source={StaticResource ProjectMappingsCollectionViewSource}}" SelectedItem="{Binding SelectedProjectMapping}" Height="300">
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="MouseDoubleClick">
+                            <catel:EventToCommand Command="{Binding Edit}" DisableAssociatedObjectOnCannotExecute="False" />
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                    
+                    <ListBox.GroupStyle>
+                        <GroupStyle>
+                            <GroupStyle.HeaderTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding Name}" FontWeight="Bold" FontSize="12" />
+                                </DataTemplate>
+                            </GroupStyle.HeaderTemplate>
+                        </GroupStyle>
+                    </ListBox.GroupStyle>
+                    
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <catel:StackGrid>
+                                <catel:StackGrid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                </catel:StackGrid.ColumnDefinitions>
+
+                                <TextBlock Text="{Binding TargetProject}" />
+                            </catel:StackGrid>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+            </ScrollViewer>
+
+            <WrapPanel>
+                <Button Command="{Binding Add}" ToolTip="Add..." Style="{StaticResource ImageButtonStyle}">
+                    <Image Source="/Caitlyn;component/Resources/Images/action_add.png" Stretch="None" />
+                </Button>
+
+                <Button Command="{Binding Edit}" ToolTip="Edit..." Style="{StaticResource ImageButtonStyle}">
+                    <Image Source="/Caitlyn;component/Resources/Images/action_edit.png" Stretch="None" />
+                </Button>
+
+                <Button Command="{Binding Remove}" ToolTip="Remove" Style="{StaticResource ImageButtonStyle}">
+                    <Image Source="/Caitlyn;component/Resources/Images/action_remove.png" Stretch="None" />
+                </Button>
+            </WrapPanel>
+        </StackPanel>
+    </catel:StackGrid>
+</catel:DataWindow>

@@ -1,0 +1,51 @@
+﻿<catel:DataWindow x:Class="Caitlyn.Views.AddRuleView"
+                  xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+				  xmlns:catel="http://catel.codeplex.com">
+    
+    <catel:StackGrid>
+		<catel:StackGrid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+			<RowDefinition Height="Auto" />
+			<RowDefinition Height="Auto" />
+            <RowDefinition Height="400" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+        </catel:StackGrid.RowDefinitions>
+
+        <catel:StackGrid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto" MaxWidth="200" />
+            <ColumnDefinition Width="300" />
+        </catel:StackGrid.ColumnDefinitions>
+
+        <Label catel:StackGrid.ColumnSpan="2" >
+            <TextBlock TextWrapping="Wrap">
+                Please select the root project that the rules should be added to. By default the current project is selected.<LineBreak />
+                <LineBreak />
+                Note that this method will not overwrite any existing rules. So if a rule already exists for one of the items that are
+                also listed below, they will not be overwritten or modified.
+            </TextBlock>
+        </Label>
+
+        <Label Content="Name" />
+        <ComboBox ItemsSource="{Binding AvailableProjects}" SelectedItem="{Binding RootProject, NotifyOnValidationError=True, ValidatesOnDataErrors=True}"/>
+        
+        <Label catel:StackGrid.ColumnSpan="2" Content="Items that will be added" />
+
+        <ListBox catel:StackGrid.ColumnSpan="2" ItemsSource="{Binding ItemsToAdd}" />
+
+        <Label Content="Rule type" />
+        <ComboBox ItemsSource="{Binding RuleTypes}" SelectedItem="{Binding RuleType}" />
+
+        <GroupBox catel:StackGrid.ColumnSpan="2" Header="This rule applies to the following projects">
+            <ItemsControl ItemsSource="{Binding ProjectTypes}">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <CheckBox Content="{Binding Name}" IsChecked="{Binding IsSelected}" />
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </GroupBox>
+    </catel:StackGrid>
+    
+</catel:DataWindow>
