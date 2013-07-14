@@ -68,12 +68,12 @@ namespace Caitlyn
         /// <summary>
         /// Windows 8.0
         /// </summary>
-        Win80,
+        WIN80,
 
         /// <summary>
         /// Windows 8.1
         /// </summary>
-        Win81
+        WIN81
     }
 
     /// <summary>
@@ -102,26 +102,14 @@ namespace Caitlyn
 
         #region Constructors
         /// <summary>
-        /// Initializes a new instance of the <see cref="Linker"/> class.
+        /// Initializes a new instance of the <see cref="Linker" /> class.
         /// </summary>
-        /// <param name="rootProject">
-        /// The root project.
-        /// </param>
-        /// <param name="targetProjects">
-        /// The projects to link.
-        /// </param>
-        /// <param name="configuration">
-        /// The configuration.
-        /// </param>
-        /// <exception cref="ArgumentNullException">
-        /// The <paramref name="rootProject"/> is <c>null</c>.
-        /// </exception>
-        /// <exception cref="ArgumentNullException">
-        /// The <paramref name="targetProjects"/> is <c>null</c>.
-        /// </exception>
-        /// <exception cref="ArgumentNullException">
-        /// The <paramref name="configuration"/> is <c>null</c>.
-        /// </exception>
+        /// <param name="rootProject">The root project.</param>
+        /// <param name="targetProjects">The projects to link.</param>
+        /// <param name="configuration">The configuration.</param>
+        /// <exception cref="ArgumentNullException">The <paramref name="rootProject" /> is <c>null</c>.</exception>
+        /// <exception cref="ArgumentNullException">The <paramref name="targetProjects" /> is <c>null</c>.</exception>
+        /// <exception cref="ArgumentNullException">The <paramref name="configuration" /> is <c>null</c>.</exception>
         public Linker(Project rootProject, Project[] targetProjects, IConfiguration configuration)
         {
             Argument.IsNotNull("rootProject", rootProject);
@@ -139,12 +127,8 @@ namespace Caitlyn
         /// Gets or sets whether missing files should be removed. If <c>true</c>, a linked file
         /// that is found in a target project will be removed.
         /// </summary>
-        /// <value>
-        /// <c>true</c> if missing files should be removed; otherwise, <c>false</c>.
-        /// </value>
-        /// <remarks>
-        /// When this value is <c>true</c>, it will never delete files that are not linked.
-        /// </remarks>
+        /// <value><c>true</c> if missing files should be removed; otherwise, <c>false</c>.</value>
+        /// <remarks>When this value is <c>true</c>, it will never delete files that are not linked.</remarks>
         public bool RemoveMissingFiles { get; set; }
 
         /// <summary>
@@ -167,9 +151,7 @@ namespace Caitlyn
         /// <summary>
         /// Links the files for all projects.
         /// </summary>
-        /// <exception cref="InvalidOperationException">
-        /// The root project file does not exist.
-        /// </exception>
+        /// <exception cref="InvalidOperationException">The root project file does not exist.</exception>
         public void LinkFiles()
         {
             Log.Debug("Linking {0} projects to {1}", TargetProjects.Length, RootProject.Name);
@@ -189,24 +171,13 @@ namespace Caitlyn
         /// <summary>
         /// Handles the change of a project item.
         /// </summary>
-        /// <param name="projectItem">
-        /// The project item.
-        /// </param>
-        /// <param name="action">
-        /// The action that happened to the project item.
-        /// </param>
-        /// <param name="oldName">
-        /// The old name in case of a rename, can be <c>null</c>.
-        /// </param>
-        /// <exception cref="ArgumentNullException">
-        /// The <paramref name="projectItem"/> is <c>null</c>.
-        /// </exception>
-        /// <exception cref="InvalidOperationException">
-        /// The root project file does not exist.
-        /// </exception>
-        /// <exception cref="ArgumentException">
-        /// The <paramref name="oldName"/> is <c>null</c> or whitespace but the action is <see cref="ProjectItemAction.Rename"/>.
-        /// </exception>
+        /// <param name="projectItem">The project item.</param>
+        /// <param name="action">The action that happened to the project item.</param>
+        /// <param name="oldName">The old name in case of a rename, can be <c>null</c>.</param>
+        /// <exception cref="System.ArgumentOutOfRangeException">action</exception>
+        /// <exception cref="ArgumentNullException">The <paramref name="projectItem" /> is <c>null</c>.</exception>
+        /// <exception cref="InvalidOperationException">The root project file does not exist.</exception>
+        /// <exception cref="ArgumentException">The <paramref name="oldName" /> is <c>null</c> or whitespace but the action is <see cref="ProjectItemAction.Rename" />.</exception>
         public void HandleProjectItemChange(ProjectItem projectItem, ProjectItemAction action, string oldName = null)
         {
             Argument.IsNotNull("projectItem", projectItem);
@@ -263,12 +234,8 @@ namespace Caitlyn
         /// <summary>
         /// Links the files for the specified project.
         /// </summary>
-        /// <param name="targetProject">
-        /// The project to link.
-        /// </param>
-        /// <exception cref="ArgumentNullException">
-        /// The <paramref name="targetProject"/> is <c>null</c>.
-        /// </exception>
+        /// <param name="targetProject">The project to link.</param>
+        /// <exception cref="ArgumentNullException">The <paramref name="targetProject" /> is <c>null</c>.</exception>
         private void LinkFiles(Project targetProject)
         {
             Argument.IsNotNull("targetProject", targetProject);
@@ -279,22 +246,12 @@ namespace Caitlyn
         /// <summary>
         /// Gets the target project items.
         /// </summary>
-        /// <param name="source">
-        /// The source.
-        /// </param>
-        /// <param name="targetProject">
-        /// The targe
-        /// <exception cref="ArgumentNullException">
-        /// The <paramref name="source"/> is <c>null</c>.
-        /// </exception>
-        /// <exception cref="ArgumentNullException">
-        /// The <paramref name="targetProject"/> is <c>null</c>.
-        /// </exception>
-        /// t project.
-        /// </param>
-        /// <returns>
-        /// ProjectItems.
-        /// </returns>
+        /// <param name="source">The source.</param>
+        /// <param name="targetProject">The target project.</param>
+        /// <returns>ProjectItems.</returns>
+        /// <exception cref="System.NotSupportedException">Only folders are supported</exception>
+        /// <exception cref="ArgumentNullException">The <paramref name="source" /> is <c>null</c>.</exception>
+        /// <exception cref="ArgumentNullException">The <paramref name="targetProject" /> is <c>null</c>.</exception>
         private ProjectItems GetTargetProjectItems(ProjectItems source, Project targetProject)
         {
             Argument.IsNotNull("source", source);
@@ -343,27 +300,13 @@ namespace Caitlyn
         /// <summary>
         /// Synchronizes the project items collection.
         /// </summary>
-        /// <param name="source">
-        /// The source.
-        /// </param>
-        /// <param name="target">
-        /// The target.
-        /// </param>
-        /// <param name="targetProjectType">
-        /// Type of the target project.
-        /// </param>
-        /// <param name="recursive">
-        /// If <c>true</c>, this method will synchronize recursive; otherwise only the top-level will be synchronized.
-        /// </param>
-        /// <param name="fileFilter">
-        /// An enumerable of files that should be handled with care, can be <c>null</c>.
-        /// </param>
-        /// <exception cref="ArgumentNullException">
-        /// The <paramref name="source"/> is <c>null</c>.
-        /// </exception>
-        /// <exception cref="ArgumentNullException">
-        /// The <paramref name="target"/> is <c>null</c>.
-        /// </exception>
+        /// <param name="source">The source.</param>
+        /// <param name="target">The target.</param>
+        /// <param name="targetProjectType">Type of the target project.</param>
+        /// <param name="recursive">If <c>true</c>, this method will synchronize recursive; otherwise only the top-level will be synchronized.</param>
+        /// <param name="fileFilter">An enumerable of files that should be handled with care, can be <c>null</c>.</param>
+        /// <exception cref="ArgumentNullException">The <paramref name="source" /> is <c>null</c>.</exception>
+        /// <exception cref="ArgumentNullException">The <paramref name="target" /> is <c>null</c>.</exception>
         private void SynchronizeProjectItem(ProjectItems source, ProjectItems target, ProjectType targetProjectType, bool recursive, IEnumerable<string> fileFilter)
         {
             Argument.IsNotNull("source", source);
@@ -387,27 +330,13 @@ namespace Caitlyn
         /// <summary>
         /// Adds the files and folders.
         /// </summary>
-        /// <param name="source">
-        /// The source.
-        /// </param>
-        /// <param name="target">
-        /// The target.
-        /// </param>
-        /// <param name="targetProjectType">
-        /// Type of the target project.
-        /// </param>
-        /// <param name="levels">
-        /// The number of levels to walk down the chain. If <c>-1</c>, it will handle all levels.
-        /// </param>
-        /// <param name="fileFilter">
-        /// An enumerable of files that should be handled with care, can be <c>null</c>.
-        /// </param>
-        /// <exception cref="ArgumentNullException">
-        /// The <paramref name="source"/> is <c>null</c>.
-        /// </exception>
-        /// <exception cref="ArgumentNullException">
-        /// The <paramref name="target"/> is <c>null</c>.
-        /// </exception>
+        /// <param name="source">The source.</param>
+        /// <param name="target">The target.</param>
+        /// <param name="targetProjectType">Type of the target project.</param>
+        /// <param name="levels">The number of levels to walk down the chain. If <c>-1</c>, it will handle all levels.</param>
+        /// <param name="fileFilter">An enumerable of files that should be handled with care, can be <c>null</c>.</param>
+        /// <exception cref="ArgumentNullException">The <paramref name="source" /> is <c>null</c>.</exception>
+        /// <exception cref="ArgumentNullException">The <paramref name="target" /> is <c>null</c>.</exception>
         private void AddFilesAndFolders(ProjectItems source, ProjectItems target, ProjectType targetProjectType, int levels, IEnumerable<string> fileFilter)
         {
             Argument.IsNotNull("source", source);
@@ -510,27 +439,13 @@ namespace Caitlyn
         /// <summary>
         /// Removes the files and folders.
         /// </summary>
-        /// <param name="source">
-        /// The source.
-        /// </param>
-        /// <param name="target">
-        /// The target.
-        /// </param>
-        /// <param name="targetProjectType">
-        /// Type of the target project.
-        /// </param>
-        /// <param name="levels">
-        /// The number of levels to walk down the chain. If <c>-1</c>, it will handle all levels.
-        /// </param>
-        /// <param name="fileFilter">
-        /// An enumerable of files that should be handled with care, can be <c>null</c>.
-        /// </param>
-        /// <exception cref="ArgumentNullException">
-        /// The <paramref name="source"/> is <c>null</c>.
-        /// </exception>
-        /// <exception cref="ArgumentNullException">
-        /// The <paramref name="target"/> is <c>null</c>.
-        /// </exception>
+        /// <param name="source">The source.</param>
+        /// <param name="target">The target.</param>
+        /// <param name="targetProjectType">Type of the target project.</param>
+        /// <param name="levels">The number of levels to walk down the chain. If <c>-1</c>, it will handle all levels.</param>
+        /// <param name="fileFilter">An enumerable of files that should be handled with care, can be <c>null</c>.</param>
+        /// <exception cref="ArgumentNullException">The <paramref name="source" /> is <c>null</c>.</exception>
+        /// <exception cref="ArgumentNullException">The <paramref name="target" /> is <c>null</c>.</exception>
         private void RemoveFilesAndFolders(ProjectItems source, ProjectItems target, ProjectType targetProjectType, int levels, IEnumerable<string> fileFilter)
         {
             Argument.IsNotNull("source", source);
@@ -611,18 +526,10 @@ namespace Caitlyn
         /// <summary>
         /// Removes the nested items of an item of which the soure does not exists.
         /// </summary>
-        /// <param name="projectItems">
-        /// The project items.
-        /// </param>
-        /// <param name="relatedProjects">
-        /// The related projects.
-        /// </param>
-        /// <exception cref="ArgumentNullException">
-        /// The <paramref name="projectItems"/> is <c>null</c>.
-        /// </exception>
-        /// <exception cref="ArgumentNullException">
-        /// The <paramref name="relatedProjects"/> is <c>null</c>.
-        /// </exception>
+        /// <param name="projectItems">The project items.</param>
+        /// <param name="relatedProjects">The related projects.</param>
+        /// <exception cref="ArgumentNullException">The <paramref name="projectItems" /> is <c>null</c>.</exception>
+        /// <exception cref="ArgumentNullException">The <paramref name="relatedProjects" /> is <c>null</c>.</exception>
         private void RemoveNestedItems(ProjectItems projectItems, Project[] relatedProjects)
         {
             Argument.IsNotNull("projectItems", projectItems);
@@ -658,18 +565,10 @@ namespace Caitlyn
         /// <summary>
         /// Synchronizes the resource file properties.
         /// </summary>
-        /// <param name="source">
-        /// The source.
-        /// </param>
-        /// <param name="target">
-        /// The target.
-        /// </param>
-        /// <exception cref="ArgumentNullException">
-        /// The <paramref name="source"/> is <c>null</c>.
-        /// </exception>
-        /// <exception cref="ArgumentNullException">
-        /// The <paramref name="target"/> is <c>null</c>.
-        /// </exception>
+        /// <param name="source">The source.</param>
+        /// <param name="target">The target.</param>
+        /// <exception cref="ArgumentNullException">The <paramref name="source" /> is <c>null</c>.</exception>
+        /// <exception cref="ArgumentNullException">The <paramref name="target" /> is <c>null</c>.</exception>
         private void SynchronizeResourceFileProperties(ProjectItem source, ProjectItem target)
         {
             Argument.IsNotNull("source", source);
@@ -697,18 +596,10 @@ namespace Caitlyn
         /// <summary>
         /// Determines whether the specified item should be skipped based on the rules in the configuration.
         /// </summary>
-        /// <param name="source">
-        /// The source.
-        /// </param>
-        /// <param name="targetProjectType">
-        /// Type of the target project.
-        /// </param>
-        /// <returns>
-        /// <c>true</c> if the item should be skipped; otherwise <c>false</c>.
-        /// </returns>
-        /// <exception cref="ArgumentNullException">
-        /// The <paramref name="source"/> is <c>null</c>.
-        /// </exception>
+        /// <param name="source">The source.</param>
+        /// <param name="targetProjectType">Type of the target project.</param>
+        /// <returns><c>true</c> if the item should be skipped; otherwise <c>false</c>.</returns>
+        /// <exception cref="ArgumentNullException">The <paramref name="source" /> is <c>null</c>.</exception>
         private bool ShouldSkipAddingOfItem(ProjectItem source, ProjectType targetProjectType)
         {
             Argument.IsNotNull("source", source);
@@ -721,24 +612,12 @@ namespace Caitlyn
         /// <summary>
         /// Determines whether the specified item should be skipped based on the rules in the configuration.
         /// </summary>
-        /// <param name="sourceProject">
-        /// The source project.
-        /// </param>
-        /// <param name="target">
-        /// The target.
-        /// </param>
-        /// <param name="targetProjectType">
-        /// Type of the target project.
-        /// </param>
-        /// <returns>
-        /// <c>true</c> if the item should be skipped; otherwise <c>false</c>.
-        /// </returns>
-        /// <exception cref="ArgumentNullException">
-        /// The <paramref name="sourceProject"/> is <c>null</c>.
-        /// </exception>
-        /// <exception cref="ArgumentNullException">
-        /// The <paramref name="target"/> is <c>null</c>.
-        /// </exception>
+        /// <param name="sourceProject">The source project.</param>
+        /// <param name="target">The target.</param>
+        /// <param name="targetProjectType">Type of the target project.</param>
+        /// <returns><c>true</c> if the item should be skipped; otherwise <c>false</c>.</returns>
+        /// <exception cref="ArgumentNullException">The <paramref name="sourceProject" /> is <c>null</c>.</exception>
+        /// <exception cref="ArgumentNullException">The <paramref name="target" /> is <c>null</c>.</exception>
         private bool ShouldSkipRemovingOfItem(Project sourceProject, ProjectItem target, ProjectType targetProjectType)
         {
             Argument.IsNotNull("sourceProject", sourceProject);
@@ -750,29 +629,15 @@ namespace Caitlyn
         }
 
         /// <summary>
-        /// Determines whether the specified <paramref name="item"/> matches the specified rule.
+        /// Determines whether the specified <paramref name="item" /> matches the specified rule.
         /// </summary>
-        /// <param name="item">
-        /// The item.
-        /// </param>
-        /// <param name="rootProjectConfiguration">
-        /// The root project configuration.
-        /// </param>
-        /// <param name="ruleType">
-        /// Type of the rule.
-        /// </param>
-        /// <param name="targetProjectType">
-        /// Type of the target project.
-        /// </param>
-        /// <returns>
-        /// <c>true</c> if the item matches the rule; otherwise <c>false</c>.
-        /// </returns>
-        /// <exception cref="ArgumentNullException">
-        /// The <paramref name="item"/> is <c>null</c>.
-        /// </exception>
-        /// <exception cref="ArgumentNullException">
-        /// The <paramref name="rootProjectConfiguration"/> is <c>null</c>.
-        /// </exception>
+        /// <param name="item">The item.</param>
+        /// <param name="rootProjectConfiguration">The root project configuration.</param>
+        /// <param name="ruleType">Type of the rule.</param>
+        /// <param name="targetProjectType">Type of the target project.</param>
+        /// <returns><c>true</c> if the item matches the rule; otherwise <c>false</c>.</returns>
+        /// <exception cref="ArgumentNullException">The <paramref name="item" /> is <c>null</c>.</exception>
+        /// <exception cref="ArgumentNullException">The <paramref name="rootProjectConfiguration" /> is <c>null</c>.</exception>
         private bool MatchesRule(ProjectItem item, RootProject rootProjectConfiguration, RuleType ruleType, ProjectType targetProjectType)
         {
             Argument.IsNotNull("item", item);
@@ -801,15 +666,9 @@ namespace Caitlyn
         /// <summary>
         /// Gets the root project configuration.
         /// </summary>
-        /// <param name="rootProject">
-        /// The root project.
-        /// </param>
-        /// <returns>
-        /// The <see cref="RootProject"/> configuration. If the configuration does not exist, and empty one is returned.
-        /// </returns>
-        /// <exception cref="ArgumentNullException">
-        /// The <paramref name="rootProject"/> is <c>null</c>.
-        /// </exception>
+        /// <param name="rootProject">The root project.</param>
+        /// <returns>The <see cref="RootProject" /> configuration. If the configuration does not exist, and empty one is returned.</returns>
+        /// <exception cref="ArgumentNullException">The <paramref name="rootProject" /> is <c>null</c>.</exception>
         private RootProject GetRootProjectConfiguration(Project rootProject)
         {
             Argument.IsNotNull("rootProject", rootProject);
