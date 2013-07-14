@@ -1,0 +1,4 @@
+Caitlyn prerequisites
+=====================
+
+* Visual Studio 2012 SDK
