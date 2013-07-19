@@ -21,14 +21,10 @@ namespace Caitlyn.ViewModels
     {
         #region Constructor & destructor
         /// <summary>
-        /// Initializes a new instance of the <see cref="SelectProjectItemViewModel"/> class.
+        /// Initializes a new instance of the <see cref="SelectProjectItemViewModel" /> class.
         /// </summary>
-        /// <param name="rootProjectItem">
-        /// The root Project Item.
-        /// </param>
-        /// <exception cref="ArgumentNullException">
-        /// The <paramref name="rootProjectItem"/> is <c>null</c>.
-        /// </exception>
+        /// <param name="rootProjectItem">The root Project Item.</param>
+        /// <exception cref="ArgumentNullException">The <paramref name="rootProjectItem" /> is <c>null</c>.</exception>
         public SelectProjectItemViewModel(IProjectItem rootProjectItem)
         {
             Argument.IsNotNull("rootProjectItem", rootProjectItem);

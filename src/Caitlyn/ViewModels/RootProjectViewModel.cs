@@ -14,6 +14,7 @@ namespace Caitlyn.ViewModels
 
     using Catel;
     using Catel.Data;
+    using Catel.IoC;
     using Catel.MVVM;
     using Catel.MVVM.Services;
 
@@ -22,21 +23,31 @@ namespace Caitlyn.ViewModels
     /// </summary>
     public class RootProjectViewModel : ViewModelBase
     {
+        private readonly IVisualStudioService _visualStudioService;
+        private readonly IUIVisualizerService _uiVisualizerService;
+        private readonly IMessageService _messageService;
+
         #region Constructor & destructor
         /// <summary>
-        /// Initializes a new instance of the <see cref="RootProjectViewModel"/> class.
+        /// Initializes a new instance of the <see cref="RootProjectViewModel" /> class.
         /// </summary>
-        /// <param name="rootProject">
-        /// The root project.
-        /// </param>
-        /// <exception cref="ArgumentNullException">
-        /// The <paramref name="rootProject"/> is <c>null</c>.
-        /// </exception>
-        public RootProjectViewModel(RootProject rootProject)
+        /// <param name="rootProject">The root project.</param>
+        /// <param name="visualStudioService">The visual studio service.</param>
+        /// <param name="uiVisualizerService">The UI visualizer service.</param>
+        /// <param name="messageService">The message service.</param>
+        /// <exception cref="ArgumentNullException">The <paramref name="rootProject" /> is <c>null</c>.</exception>
+        public RootProjectViewModel(RootProject rootProject, IVisualStudioService visualStudioService, IUIVisualizerService uiVisualizerService,
+            IMessageService messageService)
         {
-            Argument.IsNotNull("rootProject", rootProject);
+            Argument.IsNotNull(() => rootProject);
+            Argument.IsNotNull(() => visualStudioService);
+            Argument.IsNotNull(() => uiVisualizerService);
+            Argument.IsNotNull(() => messageService);
 
-            var visualStudioService = GetService<IVisualStudioService>();
+            _visualStudioService = visualStudioService;
+            _uiVisualizerService = uiVisualizerService;
+            _messageService = messageService;
+
             var availableProjects = visualStudioService.GetAllProjects();
 
             foreach (var availableProject in availableProjects)
@@ -105,10 +116,9 @@ namespace Caitlyn.ViewModels
         private void OnAddExecute()
         {
             var rule = new Rule();
-            var vm = new RuleViewModel(RootProject, rule);
+            var vm = TypeFactory.Default.CreateInstanceWithParametersAndAutoCompletion<RuleViewModel>(RootProject, rule);
 
-            var uiVisualizerService = GetService<IUIVisualizerService>();
-            if (uiVisualizerService.ShowDialog(vm) ?? false)
+            if (_uiVisualizerService.ShowDialog(vm) ?? false)
             {
                 Rules.Add(rule);
                 SelectedRule = rule;
@@ -132,10 +142,9 @@ namespace Caitlyn.ViewModels
         private void OnEditExecute()
         {
             var rule = SelectedRule;
-            var vm = new RuleViewModel(RootProject, rule);
+            var vm = TypeFactory.Default.CreateInstanceWithParametersAndAutoCompletion<RuleViewModel>(RootProject, rule);
 
-            var uiVisualizerService = GetService<IUIVisualizerService>();
-            uiVisualizerService.ShowDialog(vm);
+            _uiVisualizerService.ShowDialog(vm);
         }
 
         /// <summary>
@@ -154,8 +163,7 @@ namespace Caitlyn.ViewModels
         /// </summary>
         private void OnRemoveExecute()
         {
-            var messageService = GetService<IMessageService>();
-            if (messageService.Show("Are you sure you want to remove the selected rule including all it's settings?", "Are you sure?", MessageButton.YesNo) == MessageResult.Yes)
+            if (_messageService.Show("Are you sure you want to remove the selected rule including all it's settings?", "Are you sure?", MessageButton.YesNo) == MessageResult.Yes)
             {
                 Rules.Remove(SelectedRule);
                 SelectedRule = null;

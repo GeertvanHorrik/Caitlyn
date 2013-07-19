@@ -30,20 +30,12 @@ namespace Caitlyn.ViewModels
 
         #region Constructor & destructor
         /// <summary>
-        /// Initializes a new instance of the <see cref="SelectProjectsViewModel"/> class.
+        /// Initializes a new instance of the <see cref="SelectProjectsViewModel" /> class.
         /// </summary>
-        /// <param name="visualStudio">
-        /// The visual studio.
-        /// </param>
-        /// <param name="existingProjects">
-        /// The existing projects.
-        /// </param>
-        /// <exception cref="ArgumentNullException">
-        /// The <paramref name="visualStudio"/> is <c>null</c>.
-        /// </exception>
-        /// <exception cref="ArgumentNullException">
-        /// The <paramref name="existingProjects"/> is <c>null</c>.
-        /// </exception>
+        /// <param name="visualStudio">The visual studio.</param>
+        /// <param name="existingProjects">The existing projects.</param>
+        /// <exception cref="ArgumentNullException">The <paramref name="visualStudio" /> is <c>null</c>.</exception>
+        /// <exception cref="ArgumentNullException">The <paramref name="visualStudio" /> is <c>null</c>.</exception>
         public SelectProjectsViewModel(DTE2 visualStudio, IEnumerable<Project> existingProjects)
         {
             Argument.IsNotNull("visualStudio", visualStudio);

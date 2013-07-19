@@ -91,7 +91,6 @@ namespace Caitlyn.Models
             Initialize(name, projectItemType, parent);
         }
 
-#if !SILVERLIGHT
         /// <summary>
         /// Initializes a new instance of the <see cref="ProjectItem"/> class. 
         /// Initializes a new object based on <see cref="SerializationInfo"/>.
@@ -106,63 +105,26 @@ namespace Caitlyn.Models
             : base(info, context)
         {
         }
-#endif
         #endregion
 
         #region Properties
         /// <summary>
         /// Gets the parent.
         /// </summary>
-        public IProjectItem Parent
-        {
-            get
-            {
-                return GetValue<IProjectItem>(ParentProperty);
-            }
-            private set
-            {
-                SetValue(ParentProperty, value);
-            }
-        }
-
-        /// <summary>
-        /// Register the Parent property so it is known in the class.
-        /// </summary>
-        public static readonly PropertyData ParentProperty = RegisterProperty("Parent", typeof(IProjectItem), null);
+        public IProjectItem Parent { get; set; }
 
         /// <summary>
         /// Gets the name.
         /// </summary>
-        public string Name
-        {
-            get
-            {
-                return GetValue<string>(NameProperty);
-            }
-            private set
-            {
-                SetValue(NameProperty, value);
-            }
-        }
+        public string Name { get; set; }
 
         /// <summary>
-        /// Register the Name property so it is known in the class.
-        /// </summary>
-        public static readonly PropertyData NameProperty = RegisterProperty("Name", typeof(string), string.Empty);
-
-        /// <summary>
-        /// Gets the project item type.
+        /// Gets or sets the project item type.
         /// </summary>
         public ProjectItemType Type
         {
-            get
-            {
-                return GetValue<ProjectItemType>(TypeProperty);
-            }
-            private set
-            {
-                SetValue(TypeProperty, value);
-            }
+            get { return GetValue<ProjectItemType>(TypeProperty); }
+            set { SetValue(TypeProperty, value); }
         }
 
         /// <summary>
@@ -175,14 +137,8 @@ namespace Caitlyn.Models
         /// </summary>
         public ObservableCollection<IProjectItem> ProjectItems
         {
-            get
-            {
-                return GetValue<ObservableCollection<IProjectItem>>(ProjectItemsProperty);
-            }
-            private set
-            {
-                SetValue(ProjectItemsProperty, value);
-            }
+            get { return GetValue<ObservableCollection<IProjectItem>>(ProjectItemsProperty); }
+            private set { SetValue(ProjectItemsProperty, value); }
         }
 
         /// <summary>

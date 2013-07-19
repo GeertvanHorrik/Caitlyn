@@ -175,7 +175,7 @@ namespace Caitlyn
 
             var configuration = configurationService.LoadConfigurationForCurrentSolution();
 
-            var vm = new ConfigurationViewModel(configuration);
+            var vm = TypeFactory.Default.CreateInstanceWithParametersAndAutoCompletion<ConfigurationViewModel>(configuration);
             if (uiVisualizerService.ShowDialog(vm) ?? false)
             {
                 configurationService.SaveConfigurationForCurrentSolution();
@@ -204,7 +204,7 @@ namespace Caitlyn
 
             var configuration = configurationService.LoadConfigurationForCurrentSolution();
 
-            var vm = new AddRuleViewModel(configuration);
+            var vm = TypeFactory.Default.CreateInstanceWithParametersAndAutoCompletion<AddRuleViewModel>(configuration);
             if (uiVisualizerService.ShowDialog(vm) ?? false)
             {
                 configurationService.SaveConfigurationForCurrentSolution();

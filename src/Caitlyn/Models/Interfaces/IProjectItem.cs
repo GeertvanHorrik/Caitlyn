@@ -15,14 +15,14 @@ namespace Caitlyn.Models
     public enum ProjectItemType
     {
         /// <summary>
-        /// Folder.
-        /// </summary>
-        Folder, 
-
-        /// <summary>
         /// File.
         /// </summary>
-        File
+        File,
+
+        /// <summary>
+        /// Folder.
+        /// </summary>
+        Folder
     }
 
     public interface IProjectItem

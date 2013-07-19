@@ -28,7 +28,6 @@ namespace Caitlyn.Models
         {
         }
 
-#if !SILVERLIGHT
         /// <summary>
         /// Initializes a new instance of the <see cref="Rule"/> class. 
         /// Initializes a new object based on <see cref="SerializationInfo"/>.
@@ -43,7 +42,6 @@ namespace Caitlyn.Models
             : base(info, context)
         {
         }
-#endif
         #endregion
 
         #region Properties
@@ -52,14 +50,8 @@ namespace Caitlyn.Models
         /// </summary>
         public string Name
         {
-            get
-            {
-                return GetValue<string>(NameProperty);
-            }
-            set
-            {
-                SetValue(NameProperty, value);
-            }
+            get { return GetValue<string>(NameProperty); }
+            set { SetValue(NameProperty, value); }
         }
 
         /// <summary>
@@ -72,14 +64,8 @@ namespace Caitlyn.Models
         /// </summary>
         public RuleType Type
         {
-            get
-            {
-                return GetValue<RuleType>(TypeProperty);
-            }
-            set
-            {
-                SetValue(TypeProperty, value);
-            }
+            get { return GetValue<RuleType>(TypeProperty); }
+            set { SetValue(TypeProperty, value); }
         }
 
         /// <summary>
@@ -92,14 +78,8 @@ namespace Caitlyn.Models
         /// </summary>
         public ObservableCollection<ProjectType> ProjectTypes
         {
-            get
-            {
-                return GetValue<ObservableCollection<ProjectType>>(ProjectTypesProperty);
-            }
-            set
-            {
-                SetValue(ProjectTypesProperty, value);
-            }
+            get { return GetValue<ObservableCollection<ProjectType>>(ProjectTypesProperty); }
+            set { SetValue(ProjectTypesProperty, value); }
         }
 
         /// <summary>

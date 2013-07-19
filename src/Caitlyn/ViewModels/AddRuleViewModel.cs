@@ -28,21 +28,18 @@ namespace Caitlyn.ViewModels
 
         #region Constructor & destructor
         /// <summary>
-        /// Initializes a new instance of the <see cref="AddRuleViewModel"/> class.
+        /// Initializes a new instance of the <see cref="AddRuleViewModel" /> class.
         /// </summary>
-        /// <param name="configuration">
-        /// The configuration.
-        /// </param>
-        /// <exception cref="ArgumentNullException">
-        /// The <paramref name="configuration"/> is <c>null</c>.
-        /// </exception>
-        public AddRuleViewModel(IConfiguration configuration)
+        /// <param name="configuration">The configuration.</param>
+        /// <param name="visualStudioService">The visual studio service.</param>
+        /// <exception cref="ArgumentNullException">The <paramref name="configuration" /> is <c>null</c>.</exception>
+        /// <exception cref="ArgumentNullException">The <paramref name="visualStudioService" /> is <c>null</c>.</exception>
+        public AddRuleViewModel(IConfiguration configuration, IVisualStudioService visualStudioService)
         {
-            Argument.IsNotNull("configuration", configuration);
+            Argument.IsNotNull(() => configuration);
+            Argument.IsNotNull(() => visualStudioService);
 
             _configuration = configuration;
-
-            var visualStudioService = GetService<IVisualStudioService>();
 
             AvailableProjects = new List<string>();
             AvailableProjects.AddRange(from project in visualStudioService.GetAllProjects() select project.Name);

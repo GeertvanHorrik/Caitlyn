@@ -18,16 +18,24 @@ namespace Caitlyn.ViewModels
     /// </summary>
     public class ProjectMappingsViewModel : ViewModelBase
     {
+        private readonly IUIVisualizerService _uiVisualizerService;
+        private readonly IMessageService _messageService;
+
         #region Constructors
         /// <summary>
-        /// Initializes a new instance of the <see cref="ProjectMappingsViewModel"/> class.
+        /// Initializes a new instance of the <see cref="ProjectMappingsViewModel" /> class.
         /// </summary>
-        /// <param name="configuration">
-        /// The configuration.
-        /// </param>
-        public ProjectMappingsViewModel(Configuration configuration)
+        /// <param name="configuration">The configuration.</param>
+        /// <param name="uiVisualizerService">The UI visualizer service.</param>
+        /// <param name="messageService">The message service.</param>
+        public ProjectMappingsViewModel(Configuration configuration, IUIVisualizerService uiVisualizerService, IMessageService messageService)
         {
-            Argument.IsNotNull("configuration", configuration);
+            Argument.IsNotNull(() => configuration);
+            Argument.IsNotNull(() => uiVisualizerService);
+            Argument.IsNotNull(() => messageService);
+
+            _uiVisualizerService = uiVisualizerService;
+            _messageService = messageService;
 
             ProjectMappings = configuration.ProjectMappings;
 
@@ -85,8 +93,7 @@ namespace Caitlyn.ViewModels
             var projectMapping = new ProjectMapping();
             var vm = new ProjectMappingViewModel(projectMapping);
 
-            var uiVisualizerService = GetService<IUIVisualizerService>();
-            if (uiVisualizerService.ShowDialog(vm) ?? false)
+            if (_uiVisualizerService.ShowDialog(vm) ?? false)
             {
                 ProjectMappings.Add(projectMapping);
                 SelectedProjectMapping = projectMapping;
@@ -112,8 +119,7 @@ namespace Caitlyn.ViewModels
             var projectMapping = SelectedProjectMapping;
             var vm = new ProjectMappingViewModel(projectMapping);
 
-            var uiVisualizerService = GetService<IUIVisualizerService>();
-            uiVisualizerService.ShowDialog(vm);
+            _uiVisualizerService.ShowDialog(vm);
         }
 
         /// <summary>
@@ -132,8 +138,7 @@ namespace Caitlyn.ViewModels
         /// </summary>
         private void OnRemoveExecute()
         {
-            var messageService = GetService<IMessageService>();
-            if (messageService.Show("Are you sure you want to remove the selected project mapping?", "Are you sure?", MessageButton.YesNo) == MessageResult.Yes)
+            if (_messageService.Show("Are you sure you want to remove the selected project mapping?", "Are you sure?", MessageButton.YesNo) == MessageResult.Yes)
             {
                 ProjectMappings.Remove(SelectedProjectMapping);
                 SelectedProjectMapping = null;

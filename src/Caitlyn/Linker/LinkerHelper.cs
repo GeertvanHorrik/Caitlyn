@@ -42,22 +42,12 @@ namespace Caitlyn
         /// </list>
         /// .
         /// </summary>
-        /// <param name="rootProject">
-        /// The root project.
-        /// </param>
-        /// <param name="smartFallDown">
-        /// If set to <c>true</c>, only "lower" projects will be returned.
-        /// </param>
-        /// <returns>
-        /// The list of linked projects.
-        /// </returns>
-        /// <exception cref="ArgumentNullException">
-        /// The <paramref name="rootProject"/> is <c>null</c>.
-        /// </exception>
-        /// <remarks>
-        /// Note that the <paramref name="rootProject"/> itself will not be included in the list
-        /// of linked projects.
-        /// </remarks>
+        /// <param name="rootProject">The root project.</param>
+        /// <param name="smartFallDown">If set to <c>true</c>, only "lower" projects will be returned.</param>
+        /// <returns>The list of linked projects.</returns>
+        /// <exception cref="ArgumentNullException">The <paramref name="rootProject" /> is <c>null</c>.</exception>
+        /// <remarks>Note that the <paramref name="rootProject" /> itself will not be included in the list
+        /// of linked projects.</remarks>
         public static Project[] GetRelatedProjects(this Project rootProject, bool smartFallDown = true)
         {
             Argument.IsNotNull("rootProject", rootProject);
@@ -109,15 +99,9 @@ namespace Caitlyn
         /// Strips all possible project targets from the name. For example when a name of a project
         /// is <c>Catel.Core.NET35</c>, this method will return <c>Catel.Core</c>.
         /// </summary>
-        /// <param name="name">
-        /// The name.
-        /// </param>
-        /// <returns>
-        /// The project name without the project target.
-        /// </returns>
-        /// <exception cref="ArgumentException">
-        /// The <paramref name="name"/> is <c>null</c> or whitespace.
-        /// </exception>
+        /// <param name="name">The name.</param>
+        /// <returns>The project name without the project target.</returns>
+        /// <exception cref="ArgumentException">The <paramref name="name" /> is <c>null</c> or whitespace.</exception>
         public static string StripAllPossibleProjectTargets(string name)
         {
             Argument.IsNotNullOrWhitespace("name", name);
@@ -141,21 +125,11 @@ namespace Caitlyn
         /// Determines whether the specified project item is an actual file in the specified project. A file is considered
         /// an actual file when it is a physical, thus not linked, file in the project.
         /// </summary>
-        /// <param name="item">
-        /// The item.
-        /// </param>
-        /// <param name="project">
-        /// The project.
-        /// </param>
-        /// <returns>
-        /// <c>true</c> if the item is an actual file in the specified project; otherwise, <c>false</c>.
-        /// </returns>
-        /// <exception cref="ArgumentNullException">
-        /// The <paramref name="item"/> is <c>null</c>.
-        /// </exception>
-        /// <exception cref="ArgumentNullException">
-        /// The <paramref name="project"/> is <c>null</c>.
-        /// </exception>
+        /// <param name="item">The item.</param>
+        /// <param name="project">The project.</param>
+        /// <returns><c>true</c> if the item is an actual file in the specified project; otherwise, <c>false</c>.</returns>
+        /// <exception cref="ArgumentNullException">The <paramref name="item" /> is <c>null</c>.</exception>
+        /// <exception cref="ArgumentNullException">The <paramref name="project" /> is <c>null</c>.</exception>
         public static bool IsActualFileInProject(this ProjectItem item, Project project)
         {
             Argument.IsNotNull("item", item);
@@ -169,25 +143,21 @@ namespace Caitlyn
         /// Determines whether the specified project item is an actual file in one of the specified projects. A file is considered
         /// an actual file when it is a physical, thus not linked, file in the project.
         /// </summary>
-        /// <param name="item">
-        /// The item.
-        /// </param>
-        /// <param name="relatedProjects">
-        /// The related projects.
-        /// </param>
-        /// <returns>
-        /// <c>true</c> if the item is an actual file in one of the specified projects; otherwise, <c>false</c>.
-        /// </returns>
-        /// <exception cref="ArgumentNullException">
-        /// The <paramref name="item"/> is <c>null</c>.
-        /// </exception>
-        /// <exception cref="ArgumentNullException">
-        /// The <paramref name="relatedProjects"/> is <c>null</c>.
-        /// </exception>
+        /// <param name="item">The item.</param>
+        /// <param name="relatedProjects">The related projects.</param>
+        /// <returns><c>true</c> if the item is an actual file in one of the specified projects; otherwise, <c>false</c>.</returns>
+        /// <exception cref="ArgumentNullException">The <paramref name="item" /> is <c>null</c>.</exception>
+        /// <exception cref="ArgumentNullException">The <paramref name="relatedProjects" /> is <c>null</c>.</exception>
         public static bool IsActualFileInAnyRelatedProject(this ProjectItem item, Project[] relatedProjects)
         {
             Argument.IsNotNull("item", item);
             Argument.IsNotNull("relatedProjects", relatedProjects);
+
+            // Generated files might be linked
+            if (item.Name.Contains(".Designer"))
+            {
+                return true;
+            }
 
             foreach (var relatedProject in relatedProjects)
             {

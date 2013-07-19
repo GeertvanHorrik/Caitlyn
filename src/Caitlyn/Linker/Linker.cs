@@ -18,7 +18,6 @@ namespace Caitlyn
     using Catel.MVVM.Services;
 
     using EnvDTE;
-
     using VSLangProj;
 
     using ProjectItem = EnvDTE.ProjectItem;
@@ -73,7 +72,12 @@ namespace Caitlyn
         /// <summary>
         /// Windows 8.1
         /// </summary>
-        WIN81
+        WIN81,
+
+        /// <summary>
+        /// Portable class library.
+        /// </summary>
+        PCL
     }
 
     /// <summary>
@@ -317,12 +321,12 @@ namespace Caitlyn
 
             Log.Debug("Synchronizing source '{0}' to target '{1}'", sourceParentName, targetParentName);
 
-            AddFilesAndFolders(source, target, targetProjectType, recursive ? -1 : 1, fileFilter);
-
             if (RemoveMissingFiles)
             {
                 RemoveFilesAndFolders(source, target, targetProjectType, recursive ? -1 : 1, fileFilter);
             }
+
+            AddFilesAndFolders(source, target, targetProjectType, recursive ? -1 : 1, fileFilter);
 
             Log.Debug("Synchronized source '{0}' to target '{1}'", sourceParentName, targetParentName);
         }
@@ -424,7 +428,7 @@ namespace Caitlyn
 
                 if (sourceItem.IsResourceFile())
                 {
-                    SynchronizeResourceFileProperties(sourceItem, existingTargetItem);
+                    SynchronizeResourceFileProperties(sourceItem, existingTargetItem, targetProjectType);
                 }
 
                 if (isFolder)
@@ -567,9 +571,10 @@ namespace Caitlyn
         /// </summary>
         /// <param name="source">The source.</param>
         /// <param name="target">The target.</param>
+        /// <param name="targetProjectType">Type of the target project.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="source" /> is <c>null</c>.</exception>
         /// <exception cref="ArgumentNullException">The <paramref name="target" /> is <c>null</c>.</exception>
-        private void SynchronizeResourceFileProperties(ProjectItem source, ProjectItem target)
+        private void SynchronizeResourceFileProperties(ProjectItem source, ProjectItem target, ProjectType targetProjectType)
         {
             Argument.IsNotNull("source", source);
             Argument.IsNotNull("target", target);
@@ -579,11 +584,22 @@ namespace Caitlyn
             target.Properties.Item("CustomTool").Value = source.Properties.Item("CustomTool").Value;
             target.Properties.Item("CustomToolNamespace").Value = source.Properties.Item("CustomToolNamespace").Value;
 
+            //var customToolOutput = (string)source.Properties.Item("CustomToolOutput").Value;
+            //customToolOutput = customToolOutput.Replace(".Designer.cs", string.Format(".{0}.Designer.cs", targetProjectType.ToString()));
+            //target.Properties.Item("CustomToolOutput").Value = customToolOutput;
+
             Log.Debug("Running custom tool to generate 'code-behind' file");
 
-            // We need to run the custom tool first
-            var vsProjectItem = (VSProjectItem)target.Object;
-            vsProjectItem.RunCustomTool();
+            try
+            {
+                // We need to run the custom tool first
+                var vsProjectItem = (VSProjectItem)target.Object;
+                vsProjectItem.RunCustomTool();
+            }
+            catch (Exception ex)
+            {
+                Log.Warning(ex, "Failed to run custom tool");
+            }
 
             Log.Debug("Ran custom tool to generate 'code-behind' file");
 

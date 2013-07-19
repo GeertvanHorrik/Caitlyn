@@ -24,32 +24,33 @@ namespace Caitlyn.ViewModels
     /// </summary>
     public class RuleViewModel : ViewModelBase
     {
+        private readonly IVisualStudioService _visualStudioService;
+        private readonly IUIVisualizerService _uiVisualizerService;
+
         #region Variables
         private readonly IProjectItem _rootProjectItem;
         #endregion
 
         #region Constructor & destructor
         /// <summary>
-        /// Initializes a new instance of the <see cref="RuleViewModel"/> class.
+        /// Initializes a new instance of the <see cref="RuleViewModel" /> class.
         /// </summary>
-        /// <param name="rootProject">
-        /// The root project this rule belongs to.
-        /// </param>
-        /// <param name="rule">
-        /// The rule.
-        /// </param>
-        /// <exception cref="ArgumentNullException">
-        /// The <paramref name="rootProject"/> is <c>null</c>.
-        /// </exception>
-        /// <exception cref="ArgumentNullException">
-        /// The <paramref name="rule"/> is <c>null</c>.
-        /// </exception>
-        public RuleViewModel(RootProject rootProject, Rule rule)
+        /// <param name="rootProject">The root project this rule belongs to.</param>
+        /// <param name="rule">The rule.</param>
+        /// <param name="visualStudioService">The visual studio service.</param>
+        /// <param name="uiVisualizerService">The UI visualizer service.</param>
+        /// <exception cref="ArgumentNullException">The <paramref name="rootProject" /> is <c>null</c>.</exception>
+        /// <exception cref="ArgumentNullException">The <paramref name="rootProject" /> is <c>null</c>.</exception>
+        public RuleViewModel(RootProject rootProject, Rule rule, IVisualStudioService visualStudioService, IUIVisualizerService uiVisualizerService)
         {
-            Argument.IsNotNull("rootProject", rootProject);
-            Argument.IsNotNull("rule", rule);
+            Argument.IsNotNull(() => rootProject);
+            Argument.IsNotNull(() => rule);
+            Argument.IsNotNull(() => visualStudioService);
+            Argument.IsNotNull(() => uiVisualizerService);
 
-            var visualStudioService = GetService<IVisualStudioService>();
+            _visualStudioService = visualStudioService;
+            _uiVisualizerService = uiVisualizerService;
+
             var project = visualStudioService.GetProjectByName(rootProject.Name);
             if (project != null)
             {
@@ -127,8 +128,7 @@ namespace Caitlyn.ViewModels
         private void OnSelectProjectItemExecute()
         {
             var vm = new SelectProjectItemViewModel(_rootProjectItem);
-            var uiVisualizerService = GetService<IUIVisualizerService>();
-            if (uiVisualizerService.ShowDialog(vm) ?? false)
+            if (_uiVisualizerService.ShowDialog(vm) ?? false)
             {
                 Name = vm.SelectedProjectItemPath;
             }

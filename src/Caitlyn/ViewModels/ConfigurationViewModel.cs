@@ -11,6 +11,7 @@ namespace Caitlyn.ViewModels
     using Caitlyn.Models;
 
     using Catel;
+    using Catel.IoC;
     using Catel.MVVM;
     using Catel.MVVM.Services;
 
@@ -19,19 +20,26 @@ namespace Caitlyn.ViewModels
     /// </summary>
     public class ConfigurationViewModel : ViewModelBase
     {
+        private readonly IUIVisualizerService _uiVisualizerService;
+        private readonly IMessageService _messageService;
+
         #region Constructor & destructor
         /// <summary>
-        /// Initializes a new instance of the <see cref="ConfigurationViewModel"/> class.
+        /// Initializes a new instance of the <see cref="ConfigurationViewModel" /> class.
         /// </summary>
-        /// <param name="configuration">
-        /// The configuration.
-        /// </param>
-        /// <exception cref="ArgumentNullException">
-        /// The <paramref name="configuration"/> is <c>null</c>.
-        /// </exception>
-        public ConfigurationViewModel(Configuration configuration)
+        /// <param name="configuration">The configuration.</param>
+        /// <param name="uiVisualizerService">The UI visualizer service.</param>
+        /// <param name="messageService">The message service.</param>
+        /// <exception cref="ArgumentNullException">The <paramref name="configuration" /> is <c>null</c>.</exception>
+        /// <exception cref="ArgumentNullException">The <paramref name="configuration" /> is <c>null</c>.</exception>
+        public ConfigurationViewModel(Configuration configuration, IUIVisualizerService uiVisualizerService, IMessageService messageService)
         {
-            Argument.IsNotNull("configuration", configuration);
+            Argument.IsNotNull(() => configuration);
+            Argument.IsNotNull(() => uiVisualizerService);
+            Argument.IsNotNull(() => messageService);
+
+            _uiVisualizerService = uiVisualizerService;
+            _messageService = messageService;
 
             Configuration = configuration;
 
@@ -109,10 +117,10 @@ namespace Caitlyn.ViewModels
         private void OnAddExecute()
         {
             var rootProject = new RootProject();
-            var vm = new RootProjectViewModel(rootProject);
 
-            var uiVisualizerService = GetService<IUIVisualizerService>();
-            if (uiVisualizerService.ShowDialog(vm) ?? false)
+            var vm = TypeFactory.Default.CreateInstanceWithParametersAndAutoCompletion<RootProjectViewModel>(rootProject);
+
+            if (_uiVisualizerService.ShowDialog(vm) ?? false)
             {
                 RootProjects.Add(rootProject);
                 SelectedRootProject = rootProject;
@@ -136,10 +144,9 @@ namespace Caitlyn.ViewModels
         private void OnEditExecute()
         {
             var rootProject = SelectedRootProject;
-            var vm = new RootProjectViewModel(rootProject);
+            var vm = TypeFactory.Default.CreateInstanceWithParametersAndAutoCompletion<RootProjectViewModel>(rootProject);
 
-            var uiVisualizerService = GetService<IUIVisualizerService>();
-            uiVisualizerService.ShowDialog(vm);
+            _uiVisualizerService.ShowDialog(vm);
         }
 
         /// <summary>
@@ -158,8 +165,7 @@ namespace Caitlyn.ViewModels
         /// </summary>
         private void OnRemoveExecute()
         {
-            var messageService = GetService<IMessageService>();
-            if (messageService.Show("Are you sure you want to remove the selected root project including all it's settings?", "Are you sure?", MessageButton.YesNo) == MessageResult.Yes)
+            if (_messageService.Show("Are you sure you want to remove the selected root project including all it's settings?", "Are you sure?", MessageButton.YesNo) == MessageResult.Yes)
             {
                 RootProjects.Remove(SelectedRootProject);
                 SelectedRootProject = null;
@@ -171,9 +177,8 @@ namespace Caitlyn.ViewModels
         /// </summary>
         private void OnManageProjectMappingsExecute()
         {
-            var vm = new ProjectMappingsViewModel(Configuration);
-            var uiVisualizerService = GetService<IUIVisualizerService>();
-            uiVisualizerService.ShowDialog(vm);
+            var vm = TypeFactory.Default.CreateInstanceWithParametersAndAutoCompletion<ProjectMappingsViewModel>(Configuration);
+            _uiVisualizerService.ShowDialog(vm);
         }
         #endregion
 
