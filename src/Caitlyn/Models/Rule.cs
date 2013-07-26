@@ -96,8 +96,6 @@ namespace Caitlyn.Models
         /// <param name="validationResults">
         /// The validation results, add additional results to this list.
         /// </param>
-        /// <remarks>
-        /// </remarks>
         protected override void ValidateFields(List<IFieldValidationResult> validationResults)
         {
             if (string.IsNullOrWhiteSpace(Name))
