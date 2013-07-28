@@ -3,7 +3,7 @@
                   xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 			      xmlns:catel="http://catel.codeplex.com" 
                   Width="400" Height="600">
-    
+
     <!-- Resources -->
     <Window.Resources>
         <ResourceDictionary>
@@ -15,13 +15,13 @@
 
     <!-- Content -->
     <catel:StackGrid>
-		<catel:StackGrid.RowDefinitions>
-			<RowDefinition Height="Auto" />
+        <catel:StackGrid.RowDefinitions>
             <RowDefinition Height="Auto" />
-			<RowDefinition Height="*" />
             <RowDefinition Height="Auto" />
-		</catel:StackGrid.RowDefinitions>
-        
+            <RowDefinition Height="*" MaxHeight="400" />
+            <RowDefinition Height="Auto" />
+        </catel:StackGrid.RowDefinitions>
+
         <catel:StackGrid.ColumnDefinitions>
             <ColumnDefinition Width="Auto" />
             <ColumnDefinition Width="*" />
@@ -30,17 +30,19 @@
         <Label Content="Root project:" />
         <ComboBox ItemsSource="{Binding AvailableProjects}" SelectedItem="{Binding RootProject, ValidatesOnDataErrors=True, NotifyOnValidationError=True}"
                   DisplayMemberPath="Name"/>
-                  
+
         <Label catel:StackGrid.ColumnSpan="2" Content="Please select the projects that should link files to the root project" />
-        <ItemsControl catel:StackGrid.ColumnSpan="2" ItemsSource="{Binding SelectableProjects}">
-            <ItemsControl.ItemTemplate>
-                <DataTemplate>
-                    <StackPanel Orientation="Horizontal">
-                        <CheckBox IsChecked="{Binding IsChecked}" Content="{Binding Name}" />
-                    </StackPanel>
-                </DataTemplate>
-            </ItemsControl.ItemTemplate>
-        </ItemsControl>
+        <ScrollViewer catel:StackGrid.ColumnSpan="2">
+            <ItemsControl ItemsSource="{Binding SelectableProjects}">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel Orientation="Horizontal">
+                            <CheckBox IsChecked="{Binding IsChecked}" Content="{Binding Name}" />
+                        </StackPanel>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </ScrollViewer>
 
         <GroupBox catel:StackGrid.ColumnSpan="2" Header="Options">
             <StackPanel>
