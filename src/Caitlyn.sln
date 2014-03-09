@@ -1,6 +1,8 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2012
+# Visual Studio 2013
+VisualStudioVersion = 12.0.21005.1
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{11816BA3-A0F3-4FA2-BE3A-8B5F1FBF0745}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "lib", "lib", "{0CF66B82-A47D-4B36-A318-D38896BBFD12}"
@@ -33,9 +35,6 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Caitlyn.Test", "Caitlyn.Test\Caitlyn.Test.csproj", "{2312BE19-81B2-4E34-BDE3-817FCC6CCD67}"
 EndProject
 Global
-	GlobalSection(TestCaseManagementSettings) = postSolution
-		CategoryFile = Caitlyn.vsmdi
-	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
@@ -57,5 +56,8 @@ Global
 		{E7B15B23-11F9-4F98-B274-351C037ADA1B} = {11816BA3-A0F3-4FA2-BE3A-8B5F1FBF0745}
 		{2312BE19-81B2-4E34-BDE3-817FCC6CCD67} = {11816BA3-A0F3-4FA2-BE3A-8B5F1FBF0745}
 		{39A9F5F8-9B28-4A2C-AECB-CDCCC9A89A17} = {52EABB6F-06C1-48BE-830F-B245D63A04FC}
+	EndGlobalSection
+	GlobalSection(TestCaseManagementSettings) = postSolution
+		CategoryFile = Caitlyn.vsmdi
 	EndGlobalSection
 EndGlobal

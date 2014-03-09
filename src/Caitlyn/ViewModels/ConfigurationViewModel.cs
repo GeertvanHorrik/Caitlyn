@@ -13,7 +13,7 @@ namespace Caitlyn.ViewModels
     using Catel;
     using Catel.IoC;
     using Catel.MVVM;
-    using Catel.MVVM.Services;
+    using Catel.Services;
 
     /// <summary>
     /// Configuration view model.

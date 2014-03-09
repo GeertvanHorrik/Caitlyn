@@ -13,10 +13,10 @@ namespace Caitlyn.Converters
 
     using Catel.Windows.Data.Converters;
 
-    public class ProjectItemTypeToImageSourceConverter : IValueConverter
+    public class ProjectItemTypeToImageSourceConverter : ValueConverterBase
     {
         #region IValueConverter Members
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        protected override object Convert(object value, Type targetType, object parameter)
         {
             if (value is ProjectItemType)
             {
@@ -35,11 +35,6 @@ namespace Caitlyn.Converters
             }
 
             return null;
-        }
-
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            return ConverterHelper.DoNothingBindingValue;
         }
         #endregion
     }

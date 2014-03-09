@@ -11,7 +11,7 @@ namespace Caitlyn.ViewModels
 
     using Catel;
     using Catel.MVVM;
-    using Catel.MVVM.Services;
+    using Catel.Services;
 
     /// <summary>
     /// ProjectMappings view model.
@@ -20,6 +20,7 @@ namespace Caitlyn.ViewModels
     {
         private readonly IUIVisualizerService _uiVisualizerService;
         private readonly IMessageService _messageService;
+        private readonly IViewModelFactory _viewModelFactory;
 
         #region Constructors
         /// <summary>
@@ -28,14 +29,18 @@ namespace Caitlyn.ViewModels
         /// <param name="configuration">The configuration.</param>
         /// <param name="uiVisualizerService">The UI visualizer service.</param>
         /// <param name="messageService">The message service.</param>
-        public ProjectMappingsViewModel(Configuration configuration, IUIVisualizerService uiVisualizerService, IMessageService messageService)
+        /// <param name="viewModelFactory">The view model factory.</param>
+        public ProjectMappingsViewModel(Configuration configuration, IUIVisualizerService uiVisualizerService, 
+            IMessageService messageService, IViewModelFactory viewModelFactory)
         {
             Argument.IsNotNull(() => configuration);
             Argument.IsNotNull(() => uiVisualizerService);
             Argument.IsNotNull(() => messageService);
+            Argument.IsNotNull(() => viewModelFactory);
 
             _uiVisualizerService = uiVisualizerService;
             _messageService = messageService;
+            _viewModelFactory = viewModelFactory;
 
             ProjectMappings = configuration.ProjectMappings;
 
@@ -91,7 +96,7 @@ namespace Caitlyn.ViewModels
         private void OnAddExecute()
         {
             var projectMapping = new ProjectMapping();
-            var vm = new ProjectMappingViewModel(projectMapping);
+            var vm = _viewModelFactory.CreateViewModel<ProjectMappingViewModel>(projectMapping);
 
             if (_uiVisualizerService.ShowDialog(vm) ?? false)
             {
@@ -117,7 +122,7 @@ namespace Caitlyn.ViewModels
         private void OnEditExecute()
         {
             var projectMapping = SelectedProjectMapping;
-            var vm = new ProjectMappingViewModel(projectMapping);
+            var vm = _viewModelFactory.CreateViewModel<ProjectMappingViewModel>(projectMapping);
 
             _uiVisualizerService.ShowDialog(vm);
         }

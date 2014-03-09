@@ -15,7 +15,7 @@ namespace Caitlyn
     using Catel;
     using Catel.IoC;
     using Catel.Logging;
-    using Catel.MVVM.Services;
+    using Catel.Services;
 
     using EnvDTE;
     using VSLangProj;

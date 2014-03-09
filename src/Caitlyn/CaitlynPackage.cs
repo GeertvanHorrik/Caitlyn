@@ -15,9 +15,9 @@ namespace Caitlyn
 
     using Caitlyn.Services;
     using Caitlyn.ViewModels;
-
+    using Catel;
     using Catel.IoC;
-    using Catel.MVVM.Services;
+    using Catel.Services;
 
     using EnvDTE;
 
@@ -60,10 +60,10 @@ namespace Caitlyn
         public CaitlynPackage()
         {
 #if DEBUG
-            Catel.Logging.LogManager.RegisterDebugListener();
+            Catel.Logging.LogManager.AddDebugListener();
 #endif
 
-            Catel.Environment.BypassDevEnvCheck = true;
+            CatelEnvironment.BypassDevEnvCheck = true;
         }
         #endregion
 
@@ -83,6 +83,8 @@ namespace Caitlyn
             Trace.WriteLine(string.Format(CultureInfo.CurrentCulture, "Entering Initialize() of: {0}", ToString()));
             base.Initialize();
 
+            var typeFactory = this.GetTypeFactory();
+
             var vs = GetVisualStudio();
 
             var serviceLocator = ServiceLocator.Default;
@@ -90,7 +92,8 @@ namespace Caitlyn
             serviceLocator.RegisterType<IVisualStudioService, VisualStudioService>();
 
             serviceLocator.RegisterInstance<IConfigurationService>(new ConfigurationService(vs));
-            serviceLocator.RegisterInstance<IAutoLinkerService>(new AutoLinkerService(vs));
+            var autoLinkerService = typeFactory.CreateInstanceWithParametersAndAutoCompletion<AutoLinkerService>(vs);
+            serviceLocator.RegisterInstance<IAutoLinkerService>(autoLinkerService);
 
             // Add our command handlers for menu (commands must exist in the .vsct file)
             var mcs = GetService(typeof(IMenuCommandService)) as OleMenuCommandService;

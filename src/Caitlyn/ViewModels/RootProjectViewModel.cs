@@ -16,7 +16,7 @@ namespace Caitlyn.ViewModels
     using Catel.Data;
     using Catel.IoC;
     using Catel.MVVM;
-    using Catel.MVVM.Services;
+    using Catel.Services;
 
     /// <summary>
     /// RootProject view model.

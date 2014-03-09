@@ -22,18 +22,18 @@ namespace Caitlyn.ViewModels
     {
         #region Constructors
         /// <summary>
-        /// Initializes a new instance of the <see cref="ProjectMappingViewModel"/> class.
+        /// Initializes a new instance of the <see cref="ProjectMappingViewModel" /> class.
         /// </summary>
-        /// <param name="projectMapping">
-        /// The project Mapping.
-        /// </param>
-        public ProjectMappingViewModel(ProjectMapping projectMapping)
+        /// <param name="projectMapping">The project Mapping.</param>
+        /// <param name="visualStudioService">The visual studio service.</param>
+        public ProjectMappingViewModel(ProjectMapping projectMapping, IVisualStudioService visualStudioService)
         {
             Argument.IsNotNull("projectMapping", projectMapping);
+            Argument.IsNotNull("visualStudioService", visualStudioService);
 
             ProjectMapping = projectMapping;
 
-            AvailableProjects = new List<Project>(GetService<IVisualStudioService>().GetAllProjects());
+            AvailableProjects = new List<Project>(visualStudioService.GetAllProjects());
         }
         #endregion
 

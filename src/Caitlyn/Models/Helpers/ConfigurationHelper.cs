@@ -27,15 +27,9 @@ namespace Caitlyn.Models
         /// <summary>
         /// Gets the name of the configuration file for the specified solution.
         /// </summary>
-        /// <param name="solution">
-        /// The solution.
-        /// </param>
-        /// <returns>
-        /// The name of the configuration file for the specified solution.
-        /// </returns>
-        /// <exception cref="ArgumentNullException">
-        /// The <paramref name="solution"/> is <c>null</c>.
-        /// </exception>
+        /// <param name="solution">The solution.</param>
+        /// <returns>The name of the configuration file for the specified solution.</returns>
+        /// <exception cref="ArgumentNullException">The <paramref name="solution" /> is <c>null</c>.</exception>
         public static string GetConfigurationFileName(this Solution solution)
         {
             Argument.IsNotNull("solution", solution);
@@ -46,15 +40,9 @@ namespace Caitlyn.Models
         /// <summary>
         /// Loads the configuration of creates a default one if no configuration is found.
         /// </summary>
-        /// <param name="solution">
-        /// The solution.
-        /// </param>
-        /// <returns>
-        /// The loaded configuration or the newly created one.
-        /// </returns>
-        /// <exception cref="ArgumentNullException">
-        /// The <paramref name="solution"/> is <c>null</c>.
-        /// </exception>
+        /// <param name="solution">The solution.</param>
+        /// <returns>The loaded configuration or the newly created one.</returns>
+        /// <exception cref="ArgumentNullException">The <paramref name="solution" /> is <c>null</c>.</exception>
         public static Configuration LoadConfiguration(this Solution solution)
         {
             Argument.IsNotNull("solution", solution);
@@ -65,7 +53,10 @@ namespace Caitlyn.Models
 
             try
             {
-                configuration = Configuration.Load(fileName, SerializationMode.Xml);
+                using (var fileStream = File.OpenRead(fileName))
+                {
+                    configuration = Configuration.Load(fileStream, SerializationMode.Xml);
+                }
             }
             catch (Exception ex)
             {
@@ -92,18 +83,10 @@ namespace Caitlyn.Models
         /// <summary>
         /// Saves the configuration.
         /// </summary>
-        /// <param name="solution">
-        /// The solution to save the configuration for.
-        /// </param>
-        /// <param name="configuration">
-        /// The configuration to save.
-        /// </param>
-        /// <exception cref="ArgumentNullException">
-        /// The <paramref name="solution"/> is <c>null</c>.
-        /// </exception>
-        /// <exception cref="ArgumentNullException">
-        /// The <paramref name="configuration"/> is <c>null</c>.
-        /// </exception>
+        /// <param name="solution">The solution to save the configuration for.</param>
+        /// <param name="configuration">The configuration to save.</param>
+        /// <exception cref="ArgumentNullException">The <paramref name="solution" /> is <c>null</c>.</exception>
+        /// <exception cref="ArgumentNullException">The <paramref name="configuration" /> is <c>null</c>.</exception>
         public static void SaveConfiguration(this Solution solution, Configuration configuration)
         {
             Argument.IsNotNull("solution", solution);

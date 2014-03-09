@@ -17,7 +17,7 @@ namespace Caitlyn.ViewModels
     using Catel;
     using Catel.Data;
     using Catel.MVVM;
-    using Catel.MVVM.Services;
+    using Catel.Services;
 
     /// <summary>
     /// Rule view model.
