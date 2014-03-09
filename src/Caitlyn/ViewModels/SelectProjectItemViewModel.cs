@@ -29,6 +29,7 @@ namespace Caitlyn.ViewModels
         {
             Argument.IsNotNull("rootProjectItem", rootProjectItem);
 
+            RootProjectItems = new List<IProjectItem>();
             foreach (var projectItem in rootProjectItem.ProjectItems)
             {
                 RootProjectItems.Add(projectItem);
@@ -36,25 +37,7 @@ namespace Caitlyn.ViewModels
         }
         #endregion
 
-        #region Constants
-        /// <summary>
-        /// Register the RootProjectItems property so it is known in the class.
-        /// </summary>
-        public static readonly PropertyData RootProjectItemsProperty = RegisterProperty("RootProjectItems", typeof(List<IProjectItem>), () => new List<IProjectItem>());
-
-        /// <summary>
-        /// Register the SelectedProjectItemPath property so it is known in the class.
-        /// </summary>
-        public static readonly PropertyData SelectedProjectItemPathProperty = RegisterProperty("SelectedProjectItemPath", typeof(string));
-        #endregion
-
         #region Properties
-        /// <summary>
-        /// Gets the title of the view model.
-        /// </summary>
-        /// <value>
-        /// The title.
-        /// </value>
         public override string Title
         {
             get
@@ -66,49 +49,20 @@ namespace Caitlyn.ViewModels
         /// <summary>
         /// Gets the list of root project items.
         /// </summary>
-        public List<IProjectItem> RootProjectItems
-        {
-            get
-            {
-                return GetValue<List<IProjectItem>>(RootProjectItemsProperty);
-            }
-            set
-            {
-                SetValue(RootProjectItemsProperty, value);
-            }
-        }
+        public List<IProjectItem> RootProjectItems { get; set; }
 
         /// <summary>
         /// Gets or sets the selected project item path.
         /// </summary>
-        public string SelectedProjectItemPath
-        {
-            get
-            {
-                return GetValue<string>(SelectedProjectItemPathProperty);
-            }
-            set
-            {
-                SetValue(SelectedProjectItemPathProperty, value);
-            }
-        }
+        public string SelectedProjectItemPath { get; set; }
         #endregion
 
         #region Methods
-        /// <summary>
-        /// Validates the field values of this object. Override this method to enable
-        /// validation of field values.
-        /// </summary>
-        /// <param name="validationResults">
-        /// The validation results, add additional results to this list.
-        /// </param>
-        /// <remarks>
-        /// </remarks>
         protected override void ValidateFields(List<IFieldValidationResult> validationResults)
         {
             if (string.IsNullOrWhiteSpace(SelectedProjectItemPath))
             {
-                validationResults.Add(FieldValidationResult.CreateError(SelectedProjectItemPathProperty, "Please select a node to retrieve its name"));
+                validationResults.Add(FieldValidationResult.CreateError("SelectedProjectItemPath", "Please select a node to retrieve its name"));
             }
         }
         #endregion

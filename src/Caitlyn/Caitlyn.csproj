@@ -215,7 +215,9 @@
     <Resource Include="FodyWeavers.xml" />
     <Content Include="Resources\Package.ico" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Runtime\Serialization\" />
+  </ItemGroup>
   <ItemGroup>
     <Page Include="Views\AddRuleView.xaml">
       <SubType>Designer</SubType>

@@ -24,7 +24,6 @@ namespace Caitlyn.ViewModels
     /// </summary>
     public class RuleViewModel : ViewModelBase
     {
-        private readonly IVisualStudioService _visualStudioService;
         private readonly IUIVisualizerService _uiVisualizerService;
 
         #region Variables
@@ -48,7 +47,6 @@ namespace Caitlyn.ViewModels
             Argument.IsNotNull(() => visualStudioService);
             Argument.IsNotNull(() => uiVisualizerService);
 
-            _visualStudioService = visualStudioService;
             _uiVisualizerService = uiVisualizerService;
 
             var project = visualStudioService.GetProjectByName(rootProject.Name);
@@ -72,33 +70,6 @@ namespace Caitlyn.ViewModels
 
             SelectProjectItem = new Command(OnSelectProjectItemExecute, OnSelectProjectItemCanExecute);
         }
-        #endregion
-
-        #region Constants
-        /// <summary>
-        /// Register the Rule property so it is known in the class.
-        /// </summary>
-        public static readonly PropertyData IgnoredItemProperty = RegisterProperty("Rule", typeof(Rule));
-
-        /// <summary>
-        /// Register the Name property so it is known in the class.
-        /// </summary>
-        public static readonly PropertyData NameProperty = RegisterProperty("Name", typeof(string), string.Empty, (sender, e) => ((RuleViewModel)sender).RaisePropertyChanged("Title"));
-
-        /// <summary>
-        /// Register the Type property so it is known in the class.
-        /// </summary>
-        public static readonly PropertyData TypeProperty = RegisterProperty("Type", typeof(RuleType));
-
-        /// <summary>
-        /// Register the RuleTypes property so it is known in the class.
-        /// </summary>
-        public static readonly PropertyData RuleTypesProperty = RegisterProperty("RuleTypes", typeof(List<RuleType>));
-
-        /// <summary>
-        /// Register the ProjectTypes property so it is known in the class.
-        /// </summary>
-        public static readonly PropertyData ProjectTypesProperty = RegisterProperty("ProjectTypes", typeof(ObservableCollection<SelectableProjectType>));
         #endregion
 
         #region Commands
@@ -138,12 +109,6 @@ namespace Caitlyn.ViewModels
         #endregion
 
         #region Properties
-        /// <summary>
-        /// Gets the title of the view model.
-        /// </summary>
-        /// <value>
-        /// The title.
-        /// </value>
         public override string Title
         {
             get
@@ -156,118 +121,45 @@ namespace Caitlyn.ViewModels
         /// Gets the ignored item.
         /// </summary>
         [Model]
-        public Rule Rule
-        {
-            get
-            {
-                return GetValue<Rule>(IgnoredItemProperty);
-            }
-            private set
-            {
-                SetValue(IgnoredItemProperty, value);
-            }
-        }
+        public Rule Rule { get; set; }
 
         /// <summary>
         /// Gets or sets the name.
         /// </summary>
         [ViewModelToModel("Rule")]
-        public string Name
-        {
-            get
-            {
-                return GetValue<string>(NameProperty);
-            }
-            set
-            {
-                SetValue(NameProperty, value);
-            }
-        }
+        public string Name { get; set; }
 
         /// <summary>
         /// Gets or sets the rule type.
         /// </summary>
         [ViewModelToModel("Rule")]
-        public RuleType Type
-        {
-            get
-            {
-                return GetValue<RuleType>(TypeProperty);
-            }
-            set
-            {
-                SetValue(TypeProperty, value);
-            }
-        }
+        public RuleType Type { get; set; }
 
         /// <summary>
         /// Gets or sets the list of available rule types.
         /// </summary>
-        public List<RuleType> RuleTypes
-        {
-            get
-            {
-                return GetValue<List<RuleType>>(RuleTypesProperty);
-            }
-            set
-            {
-                SetValue(RuleTypesProperty, value);
-            }
-        }
+        public List<RuleType> RuleTypes { get; set; }
 
         /// <summary>
         /// Gets or sets the list of selectable projects.
         /// </summary>
-        public ObservableCollection<SelectableProjectType> ProjectTypes
-        {
-            get
-            {
-                return GetValue<ObservableCollection<SelectableProjectType>>(ProjectTypesProperty);
-            }
-            set
-            {
-                SetValue(ProjectTypesProperty, value);
-            }
-        }
+        public ObservableCollection<SelectableProjectType> ProjectTypes { get; set; }
         #endregion
 
         #region Methods
-        /// <summary>
-        /// Called when a property on a selectable project type has changed.
-        /// </summary>
-        /// <param name="sender">
-        /// The sender.
-        /// </param>
-        /// <param name="e">
-        /// The <see cref="System.EventArgs"/> instance containing the event data.
-        /// </param>
         private void OnSelectableProjectTypePropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             Validate(true);
         }
 
-        /// <summary>
-        /// Validates the field values of this object. Override this method to enable
-        /// validation of field values.
-        /// </summary>
-        /// <param name="validationResults">
-        /// The validation results, add additional results to this list.
-        /// </param>
         protected override void ValidateFields(List<IFieldValidationResult> validationResults)
         {
             if (string.IsNullOrWhiteSpace(Name))
             {
-                validationResults.Add(FieldValidationResult.CreateError(NameProperty, "Name is required"));
+                validationResults.Add(FieldValidationResult.CreateError("Name", "Name is required"));
             }
         }
 
-        /// <summary>
-        /// Validates the business rules of this object. Override this method to enable
-        /// validation of business rules.
-        /// </summary>
-        /// <param name="validationResults">
-        /// The validation results, add additional results to this list.
-        /// </param>
         protected override void ValidateBusinessRules(List<IBusinessRuleValidationResult> validationResults)
         {
             if (ProjectTypes != null)
@@ -280,12 +172,6 @@ namespace Caitlyn.ViewModels
             }
         }
 
-        /// <summary>
-        /// Saves the data.
-        /// </summary>
-        /// <returns>
-        /// <c>true</c> if successful; otherwise <c>false</c>.
-        /// </returns>
         protected override bool Save()
         {
             foreach (var selectableProjectType in ProjectTypes)
@@ -304,6 +190,11 @@ namespace Caitlyn.ViewModels
             }
 
             return base.Save();
+        }
+
+        private void OnNameChanged()
+        {
+            RaisePropertyChanged(() => Title);
         }
         #endregion
     }

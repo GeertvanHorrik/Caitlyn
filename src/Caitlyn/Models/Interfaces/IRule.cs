@@ -27,25 +27,10 @@ namespace Caitlyn.Models
     public interface IRule
     {
         #region Properties
-        /// <summary>
-        /// Gets or sets the name.
-        /// </summary>
-        [XmlAttribute]
         string Name { get; set; }
 
-        /// <summary>
-        /// Gets or sets the rule type.
-        /// </summary>
-        /// <value>
-        /// The rule type.
-        /// </value>
-        /// <remarks>
-        /// </remarks>
         RuleType Type { get; set; }
 
-        /// <summary>
-        /// Gets or sets the list of project types to ignore the item for.
-        /// </summary>
         ObservableCollection<ProjectType> ProjectTypes { get; set; }
         #endregion
     }

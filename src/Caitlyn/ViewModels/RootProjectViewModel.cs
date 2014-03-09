@@ -23,7 +23,6 @@ namespace Caitlyn.ViewModels
     /// </summary>
     public class RootProjectViewModel : ViewModelBase
     {
-        private readonly IVisualStudioService _visualStudioService;
         private readonly IUIVisualizerService _uiVisualizerService;
         private readonly IMessageService _messageService;
 
@@ -44,10 +43,10 @@ namespace Caitlyn.ViewModels
             Argument.IsNotNull(() => uiVisualizerService);
             Argument.IsNotNull(() => messageService);
 
-            _visualStudioService = visualStudioService;
             _uiVisualizerService = uiVisualizerService;
             _messageService = messageService;
 
+            AvailableProjects = new List<string>();
             var availableProjects = visualStudioService.GetAllProjects();
 
             foreach (var availableProject in availableProjects)
@@ -61,33 +60,6 @@ namespace Caitlyn.ViewModels
             Edit = new Command(OnEditExecute, OnEditCanExecute);
             Remove = new Command(OnRemoveExecute, OnRemoveCanExecute);
         }
-        #endregion
-
-        #region Constants
-        /// <summary>
-        /// Register the RootProject property so it is known in the class.
-        /// </summary>
-        public static readonly PropertyData RootProjectProperty = RegisterProperty("RootProject", typeof(RootProject));
-
-        /// <summary>
-        /// Register the Name property so it is known in the class.
-        /// </summary>
-        public static readonly PropertyData NameProperty = RegisterProperty("Name", typeof(string), string.Empty, (sender, e) => ((RootProjectViewModel)sender).RaisePropertyChanged("Title"));
-
-        /// <summary>
-        /// Register the AvailableProjects property so it is known in the class.
-        /// </summary>
-        public static readonly PropertyData AvailableProjectsProperty = RegisterProperty("AvailableProjects", typeof(List<string>), () => new List<string>());
-
-        /// <summary>
-        /// Register the Rules property so it is known in the class.
-        /// </summary>
-        public static readonly PropertyData RulesProperty = RegisterProperty("Rules", typeof(ObservableCollection<Rule>));
-
-        /// <summary>
-        /// Register the SelectedRule property so it is known in the class.
-        /// </summary>
-        public static readonly PropertyData SelectedIgnoredItemProperty = RegisterProperty("SelectedRule", typeof(Rule));
         #endregion
 
         #region Commands
@@ -174,12 +146,6 @@ namespace Caitlyn.ViewModels
         #endregion
 
         #region Properties
-        /// <summary>
-        /// Gets the title of the view model.
-        /// </summary>
-        /// <value>
-        /// The title.
-        /// </value>
         public override string Title
         {
             get
@@ -188,83 +154,35 @@ namespace Caitlyn.ViewModels
             }
         }
 
-        /// <summary>
-        /// Gets the root project.
-        /// </summary>
         [Model]
-        public RootProject RootProject
-        {
-            get
-            {
-                return GetValue<RootProject>(RootProjectProperty);
-            }
-            private set
-            {
-                SetValue(RootProjectProperty, value);
-            }
-        }
+        public RootProject RootProject { get; private set; }
 
         /// <summary>
         /// Gets or sets the name.
         /// </summary>
         [ViewModelToModel("RootProject")]
-        public string Name
-        {
-            get
-            {
-                return GetValue<string>(NameProperty);
-            }
-            set
-            {
-                SetValue(NameProperty, value);
-            }
-        }
+        public string Name { get; set; }
 
         /// <summary>
         /// Gets or sets the available root projects.
         /// </summary>
-        public List<string> AvailableProjects
-        {
-            get
-            {
-                return GetValue<List<string>>(AvailableProjectsProperty);
-            }
-            set
-            {
-                SetValue(AvailableProjectsProperty, value);
-            }
-        }
+        public List<string> AvailableProjects { get; set; }
 
         /// <summary>
         /// Gets or sets the list of rules.
         /// </summary>
         [ViewModelToModel("RootProject")]
-        public ObservableCollection<Rule> Rules
-        {
-            get
-            {
-                return GetValue<ObservableCollection<Rule>>(RulesProperty);
-            }
-            set
-            {
-                SetValue(RulesProperty, value);
-            }
-        }
+        public ObservableCollection<Rule> Rules { get; set; }
 
         /// <summary>
         /// Gets or sets the selected rule.
         /// </summary>
-        public Rule SelectedRule
-        {
-            get
-            {
-                return GetValue<Rule>(SelectedIgnoredItemProperty);
-            }
-            set
-            {
-                SetValue(SelectedIgnoredItemProperty, value);
-            }
-        }
+        public Rule SelectedRule { get; set; }
         #endregion
+
+        private void OnNameChanged()
+        {
+            RaisePropertyChanged(() => Title);
+        }
     }
 }

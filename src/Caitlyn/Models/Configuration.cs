@@ -7,6 +7,7 @@ namespace Caitlyn.Models
 {
     using System;
     using System.Collections.ObjectModel;
+    using System.ComponentModel;
     using System.Runtime.Serialization;
 
     using Catel.Data;
@@ -19,30 +20,14 @@ namespace Caitlyn.Models
     public class Configuration : SavableModelBase<Configuration>, IConfiguration
     {
         #region Constructor & destructor
-        /// <summary>
-        /// Initializes a new instance of the <see cref="Configuration"/> class. 
-        /// Initializes a new object from scratch.
-        /// </summary>
         public Configuration()
         {
         }
 
-#if !SILVERLIGHT
-        /// <summary>
-        /// Initializes a new instance of the <see cref="Configuration"/> class. 
-        /// Initializes a new object based on <see cref="SerializationInfo"/>.
-        /// </summary>
-        /// <param name="info">
-        /// <see cref="SerializationInfo"/> that contains the information.
-        /// </param>
-        /// <param name="context">
-        /// <see cref="StreamingContext"/>.
-        /// </param>
         protected Configuration(SerializationInfo info, StreamingContext context)
             : base(info, context)
         {
         }
-#endif
         #endregion
 
         #region Properties
@@ -51,14 +36,8 @@ namespace Caitlyn.Models
         /// </summary>
         public ObservableCollection<RootProject> RootProjects
         {
-            get
-            {
-                return GetValue<ObservableCollection<RootProject>>(RootProjectsProperty);
-            }
-            set
-            {
-                SetValue(RootProjectsProperty, value);
-            }
+            get { return GetValue<ObservableCollection<RootProject>>(RootProjectsProperty); }
+            set { SetValue(RootProjectsProperty, value); }
         }
 
         /// <summary>
@@ -71,14 +50,8 @@ namespace Caitlyn.Models
         /// </summary>
         public ObservableCollection<ProjectMapping> ProjectMappings
         {
-            get
-            {
-                return GetValue<ObservableCollection<ProjectMapping>>(ProjectMappingsProperty);
-            }
-            set
-            {
-                SetValue(ProjectMappingsProperty, value);
-            }
+            get { return GetValue<ObservableCollection<ProjectMapping>>(ProjectMappingsProperty); }
+            set { SetValue(ProjectMappingsProperty, value); }
         }
 
         /// <summary>
@@ -86,28 +59,8 @@ namespace Caitlyn.Models
         /// </summary>
         public static readonly PropertyData ProjectMappingsProperty = RegisterProperty("ProjectMappings", typeof(ObservableCollection<ProjectMapping>), () => new ObservableCollection<ProjectMapping>());
 
-        /// <summary>
-        /// Gets or sets whether this solution should autolink.
-        /// </summary>
-        public bool EnableAutoLink
-        {
-            get
-            {
-                return GetValue<bool>(EnableAutoLinkProperty);
-            }
-            set
-            {
-                SetValue(EnableAutoLinkProperty, value);
-            }
-        }
-
-        /// <summary>
-        /// Register the EnableAutoLink property so it is known in the class.
-        /// </summary>
-        public static readonly PropertyData EnableAutoLinkProperty = RegisterProperty("EnableAutoLink", typeof(bool), true);
-        #endregion
-
-        #region Methods
+        [DefaultValue(true)]
+        public bool EnableAutoLink { get; set; }
         #endregion
     }
 }

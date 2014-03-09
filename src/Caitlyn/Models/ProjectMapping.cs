@@ -19,72 +19,20 @@ namespace Caitlyn.Models
     public class ProjectMapping : ModelBase
     {
         #region Constructors
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ProjectMapping"/> class. 
-        /// Initializes a new object from scratch.
-        /// </summary>
         public ProjectMapping()
         {
         }
 
-#if !SILVERLIGHT
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ProjectMapping"/> class. 
-        /// Initializes a new object based on <see cref="SerializationInfo"/>.
-        /// </summary>
-        /// <param name="info">
-        /// <see cref="SerializationInfo"/> that contains the information.
-        /// </param>
-        /// <param name="context">
-        /// <see cref="StreamingContext"/>.
-        /// </param>
         protected ProjectMapping(SerializationInfo info, StreamingContext context)
             : base(info, context)
         {
         }
-#endif
         #endregion
 
         #region Properties
-        /// <summary>
-        /// Gets or sets the name of the source project.
-        /// </summary>
-        public string SourceProject
-        {
-            get
-            {
-                return GetValue<string>(SourceProjectProperty);
-            }
-            set
-            {
-                SetValue(SourceProjectProperty, value);
-            }
-        }
+        public string SourceProject { get; set; }
 
-        /// <summary>
-        /// Register the SourceProject property so it is known in the class.
-        /// </summary>
-        public static readonly PropertyData SourceProjectProperty = RegisterProperty("SourceProject", typeof(string), null);
-
-        /// <summary>
-        /// Gets or sets the name of the target project.
-        /// </summary>
-        public string TargetProject
-        {
-            get
-            {
-                return GetValue<string>(TargetProjectProperty);
-            }
-            set
-            {
-                SetValue(TargetProjectProperty, value);
-            }
-        }
-
-        /// <summary>
-        /// Register the TargetProject property so it is known in the class.
-        /// </summary>
-        public static readonly PropertyData TargetProjectProperty = RegisterProperty("TargetProject", typeof(string), null);
+        public string TargetProject { get; set; }
         #endregion
 
         #region Methods
@@ -92,12 +40,12 @@ namespace Caitlyn.Models
         {
             if (string.IsNullOrWhiteSpace(SourceProject))
             {
-                validationResults.Add(FieldValidationResult.CreateError(SourceProjectProperty, "Source project is required"));
+                validationResults.Add(FieldValidationResult.CreateError("SourceProject", "Source project is required"));
             }
 
             if (string.IsNullOrWhiteSpace(TargetProject))
             {
-                validationResults.Add(FieldValidationResult.CreateError(TargetProjectProperty, "Target project is required"));
+                validationResults.Add(FieldValidationResult.CreateError("TargetProject", "Target project is required"));
             }
         }
 
