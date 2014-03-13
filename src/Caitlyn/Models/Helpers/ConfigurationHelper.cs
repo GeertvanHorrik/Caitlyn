@@ -53,9 +53,12 @@ namespace Caitlyn.Models
 
             try
             {
-                using (var fileStream = File.OpenRead(fileName))
+                if (File.Exists(fileName))
                 {
-                    configuration = Configuration.Load(fileStream, SerializationMode.Xml);
+                    using (var fileStream = File.OpenRead(fileName))
+                    {
+                        configuration = Configuration.Load(fileStream, SerializationMode.Xml);
+                    }
                 }
             }
             catch (Exception ex)
@@ -72,7 +75,7 @@ namespace Caitlyn.Models
                 {
                     if (project.GetProjectType() == ProjectType.NET35)
                     {
-                        configuration.RootProjects.Add(new RootProject() { Name = project.Name });
+                        configuration.RootProjects.Add(new RootProject { Name = project.Name });
                     }
                 }
             }

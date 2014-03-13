@@ -35,7 +35,7 @@ namespace Caitlyn.Views
         /// This constructor can be used to use view-model injection.
         /// </remarks>
         public AddRuleView(AddRuleViewModel viewModel)
-            : base(viewModel)
+            : base(viewModel, DataWindowMode.Close, infoBarMessageControlGenerationMode: InfoBarMessageControlGenerationMode.None )
         {
             StyleHelper.CreateStyleForwardersForDefaultStyles(Application.Current.Resources, Resources);
 

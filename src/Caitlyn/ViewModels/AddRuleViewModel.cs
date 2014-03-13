@@ -51,7 +51,7 @@ namespace Caitlyn.ViewModels
             RuleTypes = Enum<RuleType>.ToList();
 
             ProjectTypes = new ObservableCollection<SelectableProjectType>();
-            foreach (var projectType in Enum<ProjectType>.ToList())
+            foreach (var projectType in ProjectTypeHelper.GetAvailableProjectTypes())
             {
                 var selectableProjectType = new SelectableProjectType(projectType);
                 this.SubscribeToWeakPropertyChangedEvent(selectableProjectType, OnSelectableProjectTypePropertyChanged);
@@ -133,7 +133,7 @@ namespace Caitlyn.ViewModels
 
         protected override bool Save()
         {
-            var rootProject = _configuration.RootProjects.FirstOrDefault(project => string.Compare(RootProject, project.Name) == 0);
+            var rootProject = _configuration.RootProjects.FirstOrDefault(project => string.Equals(RootProject, project.Name));
             if (rootProject == null)
             {
                 rootProject = new RootProject();
@@ -143,7 +143,9 @@ namespace Caitlyn.ViewModels
 
             foreach (var itemToAdd in ItemsToAdd)
             {
-                bool alreadyContainsRule = (from rule in rootProject.Rules where string.Compare(rule.Name, itemToAdd) == 0 select rule).Any();
+                bool alreadyContainsRule = (from rule in rootProject.Rules 
+                                            where string.Equals(rule.Name, itemToAdd) 
+                                            select rule).Any();
                 if (!alreadyContainsRule)
                 {
                     var rule = new Rule { Name = itemToAdd, Type = RuleType };

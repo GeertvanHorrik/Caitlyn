@@ -56,7 +56,7 @@ namespace Caitlyn.ViewModels
 
             RootProject = rootProject;
 
-            Add = new Command(OnAddExecute);
+            Add = new Command(OnAddExecute, OnAddCanExecute);
             Edit = new Command(OnEditExecute, OnEditCanExecute);
             Remove = new Command(OnRemoveExecute, OnRemoveCanExecute);
         }
@@ -82,6 +82,11 @@ namespace Caitlyn.ViewModels
         #endregion
 
         #region Methods
+        private bool OnAddCanExecute()
+        {
+            return RootProject != null;
+        }
+
         /// <summary>
         /// Method to invoke when the Add command is executed.
         /// </summary>

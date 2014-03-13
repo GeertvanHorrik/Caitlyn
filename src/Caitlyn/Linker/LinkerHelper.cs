@@ -10,7 +10,7 @@ namespace Caitlyn
     using System.Linq;
 
     using Catel;
-
+    using Catel.Collections;
     using EnvDTE;
 
     public static class LinkerHelper
@@ -64,7 +64,7 @@ namespace Caitlyn
             string projectName = StripAllPossibleProjectTargets(rootProject.Name);
             var rootProjectType = rootProject.GetProjectType();
 
-            var enumNames = Enum<ProjectType>.GetNames();
+            var enumNames = ProjectTypeHelper.GetAvailableProjectTypes().Select(x => x.ToString());
             foreach (var item in enumNames)
             {
                 string linkedProjectName = string.Format("{0}.{1}", projectName, item);

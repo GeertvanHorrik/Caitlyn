@@ -60,7 +60,7 @@ namespace Caitlyn.ViewModels
             RuleTypes = Enum<RuleType>.ToList();
             ProjectTypes = new ObservableCollection<SelectableProjectType>();
 
-            foreach (var projectType in Enum<ProjectType>.ToList())
+            foreach (var projectType in ProjectTypeHelper.GetAvailableProjectTypes())
             {
                 bool isSelected = rule.ProjectTypes.Contains(projectType);
                 var selectableProjectType = new SelectableProjectType(projectType, isSelected);

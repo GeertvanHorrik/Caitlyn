@@ -8,11 +8,13 @@ namespace Caitlyn.Services
     using Caitlyn.Models;
 
     using Catel;
-
+    using Catel.Logging;
     using EnvDTE80;
 
     public class ConfigurationService : IConfigurationService
     {
+        private static readonly ILog Log = LogManager.GetCurrentClassLogger();
+
         #region Fields
         private readonly DTE2 _visualStudio;
 
@@ -41,6 +43,8 @@ namespace Caitlyn.Services
                 var currentSolution = _visualStudio.Solution;
                 if (currentSolution != null && !string.IsNullOrWhiteSpace(currentSolution.FullName))
                 {
+                    Log.Info("Loading configuration for current solution: '{0}'", currentSolution.FullName);
+
                     _currentConfiguration = currentSolution.LoadConfiguration();
                 }
             }
@@ -55,6 +59,8 @@ namespace Caitlyn.Services
                 var currentSolution = _visualStudio.Solution;
                 if (currentSolution != null)
                 {
+                    Log.Info("Saving configuration for current solution: '{0}'", currentSolution.FullName);
+
                     currentSolution.SaveConfiguration(_currentConfiguration);
                 }
             }

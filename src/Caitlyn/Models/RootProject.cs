@@ -33,7 +33,6 @@ namespace Caitlyn.Models
 
         #region Properties
         [DefaultValue("")]
-        [XmlAttribute]
         public string Name { get; set; }
 
         /// <summary>

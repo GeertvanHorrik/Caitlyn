@@ -57,12 +57,15 @@ namespace Caitlyn
         /// <summary>
         /// Windows Phone 7 (Mango).
         /// </summary>
-        WP7, 
+        WP7,
 
         /// <summary>
         /// Windows Phone 8.
         /// </summary>
-        WP8, 
+        WP80,
+
+        [Obsolete("Use WP80 instead", true)]
+        WP8 = WP80,
 
         /// <summary>
         /// Windows 8.0

@@ -26,14 +26,10 @@ namespace Caitlyn.Views
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ConfigurationView"/> class.
+        /// Initializes a new instance of the <see cref="ConfigurationView" /> class.
         /// </summary>
-        /// <param name="viewModel">
-        /// The view Model.
-        /// </param>
-        /// <remarks>
-        /// This constructor can be used to use view-model injection.
-        /// </remarks>
+        /// <param name="viewModel">The view Model.</param>
+        /// <remarks>This constructor can be used to use view-model injection.</remarks>
         public ConfigurationView(ConfigurationViewModel viewModel)
             : base(viewModel)
         {

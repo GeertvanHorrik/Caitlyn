@@ -9,13 +9,15 @@ namespace Caitlyn.Services
     using System.Linq;
 
     using Catel;
-
+    using Catel.Logging;
     using EnvDTE;
 
     using EnvDTE80;
 
     public class AutoLinkerService : Catel.Services.ViewModelServiceBase, IAutoLinkerService
     {
+        private static readonly ILog Log = LogManager.GetCurrentClassLogger();
+
         #region Fields
         private readonly ProjectItemsEvents _projectItemsEvents;
 
@@ -93,6 +95,8 @@ namespace Caitlyn.Services
             {
                 return;
             }
+
+            Log.Debug("Handling action '{0}' for item '{1}'", action, projectItem.Name);
 
             var configuration = _configurationService.LoadConfigurationForCurrentSolution();
             if (configuration.EnableAutoLink)

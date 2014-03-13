@@ -19,8 +19,9 @@
         {
             Argument.IsNotNull("project", project);
 
-            foreach (string projectTypeName in Enum<ProjectType>.GetNames())
+            foreach (var projectType in ProjectTypeHelper.GetAvailableProjectTypes())
             {
+                var projectTypeName = projectType.ToString();
                 if (project.Name.Contains(projectTypeName))
                 {
                     return (ProjectType)Enum.Parse(typeof (ProjectType), projectTypeName);
@@ -42,8 +43,9 @@
 
             var name = project.Name;
 
-            foreach (string projectTypeName in Enum<ProjectType>.GetNames())
+            foreach (var projectType in ProjectTypeHelper.GetAvailableProjectTypes())
             {
+                var projectTypeName = projectType.ToString();
                 name = name.Replace(projectTypeName, string.Empty);
             }
 
@@ -79,8 +81,10 @@
                 var projectGroupProjects = projectGroup.Value;
                 var sortedProjectGroupProjects = new List<Project>();
 
-                foreach (string name in Enum<ProjectType>.GetNames())
+                foreach (var projectType in ProjectTypeHelper.GetAvailableProjectTypes())
                 {
+                    string name = projectType.ToString();
+
                     foreach (var project in projectGroupProjects)
                     {
                         if (project.Name.Contains(name))

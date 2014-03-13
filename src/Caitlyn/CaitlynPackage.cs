@@ -17,6 +17,8 @@ namespace Caitlyn
     using Caitlyn.ViewModels;
     using Catel;
     using Catel.IoC;
+    using Catel.Logging;
+    using Catel.Reflection;
     using Catel.Services;
 
     using EnvDTE;
@@ -48,6 +50,8 @@ namespace Caitlyn
     [Guid(GuidList.guidCaitlynPkgString)]
     public sealed class CaitlynPackage : Package
     {
+        private static readonly ILog Log = LogManager.GetCurrentClassLogger();
+
         #region Constructors
         /// <summary>
         /// Initializes a new instance of the <see cref="CaitlynPackage"/> class. 
@@ -60,10 +64,16 @@ namespace Caitlyn
         public CaitlynPackage()
         {
 #if DEBUG
-            Catel.Logging.LogManager.AddDebugListener();
+            LogManager.AddDebugListener(false);
 #endif
 
             CatelEnvironment.BypassDevEnvCheck = true;
+
+            var assembly = GetType().Assembly;
+            var configPath = string.Format("{0}.config", assembly.Location);
+            LogManager.LoadListenersFromConfigurationFile(configPath, assembly);
+
+            Log.Info("Caitlyn started");
         }
         #endregion
 
@@ -76,22 +86,28 @@ namespace Caitlyn
         /// </summary>
         protected override void Initialize()
         {
-            var currentApplication = Application.Current ?? new Application();
+            Log.Info("Initializing");
 
+            var currentApplication = Application.Current ?? new Application();
             currentApplication.Resources.MergedDictionaries.Add(new ResourceDictionary { Source = new Uri("/Catel.Extensions.Controls;component/themes/generic.xaml", UriKind.RelativeOrAbsolute) });
 
-            Trace.WriteLine(string.Format(CultureInfo.CurrentCulture, "Entering Initialize() of: {0}", ToString()));
             base.Initialize();
 
             var typeFactory = this.GetTypeFactory();
 
+            Log.Info("Retrieving instance of Visual Studio");
+
             var vs = GetVisualStudio();
+
+            Log.Info("Setting up service locator");
 
             var serviceLocator = ServiceLocator.Default;
             serviceLocator.RegisterInstance<DTE2>(vs);
             serviceLocator.RegisterType<IVisualStudioService, VisualStudioService>();
 
-            serviceLocator.RegisterInstance<IConfigurationService>(new ConfigurationService(vs));
+            var configurationService = new ConfigurationService(vs);
+            serviceLocator.RegisterInstance<IConfigurationService>(configurationService);
+
             var autoLinkerService = typeFactory.CreateInstanceWithParametersAndAutoCompletion<AutoLinkerService>(vs);
             serviceLocator.RegisterInstance<IAutoLinkerService>(autoLinkerService);
 
@@ -99,6 +115,8 @@ namespace Caitlyn
             var mcs = GetService(typeof(IMenuCommandService)) as OleMenuCommandService;
             if (null != mcs)
             {
+                Log.Info("Creating menu entries");
+
                 // Link files
                 var linkProjectsMenuItemCommandId = new CommandID(GuidList.guidCaitlynCmdSet, (int)PkgCmdIDList.LinkFiles);
                 var linkProjectsMenuItem = new MenuCommand(OnLinkProjects, linkProjectsMenuItemCommandId);
@@ -114,19 +132,19 @@ namespace Caitlyn
                 var addRuleMenuItem = new MenuCommand(OnAddRule, addRuleMenuItemCommandId);
                 mcs.AddCommand(addRuleMenuItem);
             }
+
+            Log.Info("Initialized");
         }
 
         /// <summary>
         /// Called when the link projects menu item is clicked.
         /// </summary>
-        /// <param name="sender">
-        /// The sender.
-        /// </param>
-        /// <param name="e">
-        /// The e.
-        /// </param>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The e.</param>
         private void OnLinkProjects(object sender, EventArgs e)
         {
+            Log.Info("Linking projects");
+
             if (!IsSolutionOpenend())
             {
                 return;
@@ -136,12 +154,16 @@ namespace Caitlyn
             var uiVisualizerService = serviceLocator.ResolveType<IUIVisualizerService>();
             var configurationService = serviceLocator.ResolveType<IConfigurationService>();
 
+            Log.Info("Loading configuration for current solution");
+
             var dte = GetVisualStudio();
             var configuration = configurationService.LoadConfigurationForCurrentSolution();
 
             var vm = new SelectProjectsViewModel(dte, dte.Solution.GetAllProjects());
             if (uiVisualizerService.ShowDialog(vm) ?? false)
             {
+                Log.Info("Linking projects dialog returned success, linking projects");
+
                 var pleaseWaitService = serviceLocator.ResolveType<IPleaseWaitService>();
                 pleaseWaitService.Show("Linking projects, please be patient");
 
@@ -152,6 +174,8 @@ namespace Caitlyn
                 linker.RemoveMissingFiles = vm.RemoveMissingFiles;
                 linker.LinkFiles();
 
+                Log.Info("Linked projects");
+
                 pleaseWaitService.Hide();
             }
         }
@@ -159,14 +183,12 @@ namespace Caitlyn
         /// <summary>
         /// Called when the configuration menu item is clicked.
         /// </summary>
-        /// <param name="sender">
-        /// The sender.
-        /// </param>
-        /// <param name="e">
-        /// The e.
-        /// </param>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The e.</param>
         private void OnConfiguration(object sender, EventArgs e)
         {
+            Log.Info("Opening configuration");
+
             if (!IsSolutionOpenend())
             {
                 return;
@@ -176,11 +198,15 @@ namespace Caitlyn
             var uiVisualizerService = serviceLocator.ResolveType<IUIVisualizerService>();
             var configurationService = serviceLocator.ResolveType<IConfigurationService>();
 
+            Log.Info("Loading configuration for current solution");
+
             var configuration = configurationService.LoadConfigurationForCurrentSolution();
 
             var vm = TypeFactory.Default.CreateInstanceWithParametersAndAutoCompletion<ConfigurationViewModel>(configuration);
             if (uiVisualizerService.ShowDialog(vm) ?? false)
             {
+                Log.Info("Configuration dialog returned success, saving configuration");
+
                 configurationService.SaveConfigurationForCurrentSolution();
             }
         }
@@ -188,14 +214,12 @@ namespace Caitlyn
         /// <summary>
         /// Called when the add rule menu item is clicked.
         /// </summary>
-        /// <param name="sender">
-        /// The sender.
-        /// </param>
-        /// <param name="e">
-        /// The e.
-        /// </param>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The e.</param>
         private void OnAddRule(object sender, EventArgs e)
         {
+            Log.Info("Adding rule");
+
             if (!IsSolutionOpenend())
             {
                 return;
@@ -205,11 +229,15 @@ namespace Caitlyn
             var uiVisualizerService = serviceLocator.ResolveType<IUIVisualizerService>();
             var configurationService = serviceLocator.ResolveType<IConfigurationService>();
 
+            Log.Info("Loading configuration for current solution");
+
             var configuration = configurationService.LoadConfigurationForCurrentSolution();
 
             var vm = TypeFactory.Default.CreateInstanceWithParametersAndAutoCompletion<AddRuleViewModel>(configuration);
             if (uiVisualizerService.ShowDialog(vm) ?? false)
             {
+                Log.Info("Adding rule dialog returned success, saving configuration");
+
                 configurationService.SaveConfigurationForCurrentSolution();
             }
         }
@@ -226,6 +254,8 @@ namespace Caitlyn
             var dte = GetVisualStudio();
             if (!dte.IsSolutionOpened())
             {
+                Log.Warning("No solution is opened, cannot continue");
+
                 var messageService = ServiceLocator.Default.ResolveType<IMessageService>();
                 messageService.ShowError("This extension cannot be used without opening a solution first");
                 return false;
@@ -237,9 +267,7 @@ namespace Caitlyn
         /// <summary>
         /// Gets the visual studio object.
         /// </summary>
-        /// <returns>
-        /// The <see cref="DTE"/> representing visual studio.
-        /// </returns>
+        /// <returns>The <see cref="DTE" /> representing visual studio.</returns>
         private DTE2 GetVisualStudio()
         {
             // return System.Runtime.InteropServices.Marshal.GetActiveObject("VisualStudio.DTE.11.0") as DTE2;

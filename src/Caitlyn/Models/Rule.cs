@@ -10,14 +10,16 @@ namespace Caitlyn.Models
     using System.Collections.ObjectModel;
     using System.ComponentModel;
     using System.Runtime.Serialization;
-    using System.Xml.Serialization;
+    using Caitlyn.Runtime.Serialization;
     using Catel.Data;
+    using Catel.Runtime.Serialization;
 
     /// <summary>
     /// Rule Data object class which fully supports serialization, property changed notifications,
     /// backwards compatibility and error checking.
     /// </summary>
     [Serializable]
+    [SerializerModifier(typeof(RuleSerializerModifier))]
     public class Rule : ModelBase, IRule
     {
         #region Constructor & destructor
@@ -33,7 +35,6 @@ namespace Caitlyn.Models
 
         #region Properties
         [DefaultValue("")]
-        [XmlAttribute]
         public string Name { get; set; }
 
         [DefaultValue(RuleType.DoNotAdd)]
