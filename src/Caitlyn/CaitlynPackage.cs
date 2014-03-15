@@ -67,6 +67,13 @@ namespace Caitlyn
             LogManager.AddDebugListener(false);
 #endif
 
+            TypeCache.ShouldIgnoreAssemblyEvaluators.Add(x => x.FullName.Contains("JetBrains"));
+            TypeCache.ShouldIgnoreAssemblyEvaluators.Add(x => x.FullName.Contains("Telerik"));
+            TypeCache.ShouldIgnoreAssemblyEvaluators.Add(x => x.FullName.Contains("DevExpress"));
+            TypeCache.ShouldIgnoreAssemblyEvaluators.Add(x => x.FullName.Contains("SyncFusion"));
+            TypeCache.ShouldIgnoreAssemblyEvaluators.Add(x => x.FullName.Contains("Microsoft.TeamFoundation"));
+            TypeCache.ShouldIgnoreAssemblyEvaluators.Add(x => x.FullName.Contains("FSharp"));
+
             CatelEnvironment.BypassDevEnvCheck = true;
 
             var assembly = GetType().Assembly;
