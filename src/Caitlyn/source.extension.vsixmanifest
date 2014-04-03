@@ -3,10 +3,10 @@
   <Identifier Id="9106c2a4-0c2d-4064-9c05-b0d3e408d905">
     <Name>Caitlyn</Name>
     <Author>CatenaLogic</Author>
-    <Version>2.1.0.0</Version>
+    <Version>3.0.0.0</Version>
     <Description xml:space="preserve">Caitlyn - a great tool to link project files targeting multiple platforms</Description>
     <Locale>1033</Locale>
-	<MoreInfoUrl>https://github.com/GeertvanHorrik/Caitlyn</MoreInfoUrl>
+    <MoreInfoUrl>https://github.com/GeertvanHorrik/Caitlyn</MoreInfoUrl>
     <InstalledByMsi>false</InstalledByMsi>
     <SupportedProducts>
       <VisualStudio Version="10.0">

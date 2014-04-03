@@ -16,7 +16,7 @@ namespace Caitlyn.Models
         public SelectableProjectType(ProjectType projectType, bool isSelected = false)
         {
             ProjectType = projectType;
-            Name = projectType.ToString();
+            Name = projectType.ToString().Replace("_", ".");
             IsSelected = isSelected;
         }
         #endregion

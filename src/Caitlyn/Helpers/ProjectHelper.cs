@@ -19,12 +19,11 @@
         {
             Argument.IsNotNull("project", project);
 
-            foreach (var projectType in ProjectTypeHelper.GetAvailableProjectTypes())
+            foreach (var projectType in ProjectTypeHelper.GetAvailableProjectTypesAsStrings())
             {
-                var projectTypeName = projectType.ToString();
-                if (project.Name.Contains(projectTypeName))
+                if (project.Name.Contains(projectType))
                 {
-                    return (ProjectType)Enum.Parse(typeof (ProjectType), projectTypeName);
+                    return (ProjectType)Enum.Parse(typeof(ProjectType), projectType.Replace(".", "_"));
                 }
             }
 
@@ -43,10 +42,9 @@
 
             var name = project.Name;
 
-            foreach (var projectType in ProjectTypeHelper.GetAvailableProjectTypes())
+            foreach (var projectType in ProjectTypeHelper.GetAvailableProjectTypesAsStrings())
             {
-                var projectTypeName = projectType.ToString();
-                name = name.Replace(projectTypeName, string.Empty);
+                name = name.Replace(projectType, string.Empty);
             }
 
             return name;
@@ -81,13 +79,11 @@
                 var projectGroupProjects = projectGroup.Value;
                 var sortedProjectGroupProjects = new List<Project>();
 
-                foreach (var projectType in ProjectTypeHelper.GetAvailableProjectTypes())
+                foreach (var projectType in ProjectTypeHelper.GetAvailableProjectTypesAsStrings())
                 {
-                    string name = projectType.ToString();
-
                     foreach (var project in projectGroupProjects)
                     {
-                        if (project.Name.Contains(name))
+                        if (project.Name.Contains(projectType))
                         {
                             sortedProjectGroupProjects.Add(project);
                             break;

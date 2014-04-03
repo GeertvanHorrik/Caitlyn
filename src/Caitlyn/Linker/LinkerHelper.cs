@@ -64,12 +64,11 @@ namespace Caitlyn
             string projectName = StripAllPossibleProjectTargets(rootProject.Name);
             var rootProjectType = rootProject.GetProjectType();
 
-            var enumNames = ProjectTypeHelper.GetAvailableProjectTypes().Select(x => x.ToString());
+            var enumNames = ProjectTypeHelper.GetAvailableProjectTypesAsStrings();
             foreach (var item in enumNames)
             {
                 string linkedProjectName = string.Format("{0}.{1}", projectName, item);
-
-                if (linkedProjectName == rootProject.Name)
+                if (string.Equals(linkedProjectName, rootProject.Name))
                 {
                     continue;
                 }

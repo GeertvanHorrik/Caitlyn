@@ -12,7 +12,7 @@ namespace Caitlyn
     using System.Linq;
     using System.Runtime.InteropServices;
     using System.Windows;
-
+    using Caitlyn.Logging;
     using Caitlyn.Services;
     using Caitlyn.ViewModels;
     using Catel;
@@ -66,6 +66,10 @@ namespace Caitlyn
 #if DEBUG
             LogManager.AddDebugListener(false);
 #endif
+
+            var visualStudioLogListener = new VisualStudioLogListener();
+            visualStudioLogListener.IgnoreCatelLogging = true;
+            LogManager.AddListener(visualStudioLogListener);
 
             TypeCache.ShouldIgnoreAssemblyEvaluators.Add(x => x.FullName.Contains("JetBrains"));
             TypeCache.ShouldIgnoreAssemblyEvaluators.Add(x => x.FullName.Contains("Telerik"));

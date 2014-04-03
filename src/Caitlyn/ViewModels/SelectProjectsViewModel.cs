@@ -8,6 +8,7 @@ namespace Caitlyn.ViewModels
     using System;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
+    using System.ComponentModel;
     using System.Linq;
 
     using Catel;
@@ -26,6 +27,7 @@ namespace Caitlyn.ViewModels
     {
         #region Variables
         private readonly DTE2 _visualStudio;
+        private readonly List<ProjectSelection> _selectableProjects; 
         #endregion
 
         #region Constructor & destructor
@@ -43,41 +45,14 @@ namespace Caitlyn.ViewModels
 
             _visualStudio = visualStudio;
             AvailableProjects = new List<Project>(existingProjects);
+            _selectableProjects = AvailableProjects.Select(x => new ProjectSelection(x)).ToList();
             SelectableProjects = new ObservableCollection<ProjectSelection>();
 
             RootProject = _visualStudio.GetActiveProject();
         }
         #endregion
 
-        #region Constants
-        /// <summary>
-        /// Register the AvailableProjects property so it is known in the class.
-        /// </summary>
-        public static readonly PropertyData AvailableProjectsProperty = RegisterProperty("AvailableProjects", typeof(List<Project>));
-
-        /// <summary>
-        /// Register the RootProject property so it is known in the class.
-        /// </summary>
-        public static readonly PropertyData RootProjectProperty = RegisterProperty("RootProject", typeof(Project), null, (sender, e) => ((SelectProjectsViewModel)sender).OnRootProjectChanged());
-
-        /// <summary>
-        /// Register the SelectableProjects property so it is known in the class.
-        /// </summary>
-        public static readonly PropertyData SelectableProjectsProperty = RegisterProperty("SelectableProjects", typeof(ObservableCollection<ProjectSelection>));
-
-        /// <summary>
-        /// Register the RemoveMissingFiles property so it is known in the class.
-        /// </summary>
-        public static readonly PropertyData RemoveMissingFilesProperty = RegisterProperty("RemoveMissingFiles", typeof(bool), true);
-        #endregion
-
         #region Properties
-        /// <summary>
-        /// Gets the title of the view model.
-        /// </summary>
-        /// <value>
-        /// The title.
-        /// </value>
         public override string Title
         {
             get
@@ -86,115 +61,82 @@ namespace Caitlyn.ViewModels
             }
         }
 
+        public string Filter { get; set; }
+
         /// <summary>
         /// Gets or sets a list of available projects.
         /// </summary>
-        public List<Project> AvailableProjects
-        {
-            get
-            {
-                return GetValue<List<Project>>(AvailableProjectsProperty);
-            }
-            set
-            {
-                SetValue(AvailableProjectsProperty, value);
-            }
-        }
+        public List<Project> AvailableProjects { get; set; }
 
         /// <summary>
         /// Gets or sets the selected root project.
         /// </summary>
-        public Project RootProject
-        {
-            get
-            {
-                return GetValue<Project>(RootProjectProperty);
-            }
-            set
-            {
-                SetValue(RootProjectProperty, value);
-            }
-        }
+        public Project RootProject { get; set; }
 
         /// <summary>
         /// Gets the list of items that are selectable.
         /// </summary>
-        public ObservableCollection<ProjectSelection> SelectableProjects
-        {
-            get
-            {
-                return GetValue<ObservableCollection<ProjectSelection>>(SelectableProjectsProperty);
-            }
-            set
-            {
-                SetValue(SelectableProjectsProperty, value);
-            }
-        }
+        public ObservableCollection<ProjectSelection> SelectableProjects { get; set; }
 
         /// <summary>
         /// Gets or sets whether missing files should be removed.
         /// </summary>
-        public bool RemoveMissingFiles
-        {
-            get
-            {
-                return GetValue<bool>(RemoveMissingFilesProperty);
-            }
-            set
-            {
-                SetValue(RemoveMissingFilesProperty, value);
-            }
-        }
+        [DefaultValue(true)]
+        public bool RemoveMissingFiles { get; set; }
         #endregion
 
         #region Methods
-        /// <summary>
-        /// Called when the <see cref="RootProject"/> property changes.
-        /// </summary>
+        protected override void Initialize()
+        {
+            base.Initialize();
+
+            UpdateFilter();
+        }
+
+        private void OnFilterChanged()
+        {
+            UpdateFilter();
+        }
+
         private void OnRootProjectChanged()
         {
-            SelectableProjects.ReplaceRange(from project in AvailableProjects select new ProjectSelection(project));
-
             if (RootProject != null)
             {
+                foreach (var project in _selectableProjects)
+                {
+                    project.IsChecked = false;
+                }
+
                 var linkedProjects = RootProject.GetRelatedProjects();
                 foreach (var linkedProject in linkedProjects)
                 {
-                    var rightProject = (from selectableProject in SelectableProjects where string.Compare(selectableProject.Name, linkedProject.Name) == 0 select selectableProject).First();
+                    var rightProject = (from selectableProject in _selectableProjects
+                                        where string.Compare(selectableProject.Name, linkedProject.Name) == 0
+                                        select selectableProject).First();
                     rightProject.IsChecked = true;
                 }
             }
         }
 
-        /// <summary>
-        /// Validates the field values of this object. Override this method to enable
-        /// validation of field values.
-        /// </summary>
-        /// <param name="validationResults">
-        /// The validation results, add additional results to this list.
-        /// </param>
-        /// <remarks>
-        /// </remarks>
+        private void UpdateFilter()
+        {
+            var selectableProjects = _selectableProjects.Select(x => x);
+
+            if (!string.IsNullOrWhiteSpace(Filter))
+            {
+                string lowerCaseFilter = Filter.ToLower();
+                selectableProjects = selectableProjects.Where(x => x.Name.ToLower().Contains(lowerCaseFilter) || x.IsChecked);
+            }
+
+            SelectableProjects.ReplaceRange(selectableProjects.ToList());
+        }
+
         protected override void ValidateFields(List<IFieldValidationResult> validationResults)
         {
             if (RootProject == null)
             {
-                validationResults.Add(FieldValidationResult.CreateError(RootProjectProperty, "Root project is required"));
+                validationResults.Add(FieldValidationResult.CreateError("RootProject", "Root project is required"));
             }
-        }
-
-        /// <summary>
-        /// Validates the business rules of this object. Override this method to enable
-        /// validation of business rules.
-        /// </summary>
-        /// <param name="validationResults">
-        /// The validation results, add additional results to this list.
-        /// </param>
-        /// <remarks>
-        /// </remarks>
-        protected override void ValidateBusinessRules(List<IBusinessRuleValidationResult> validationResults)
-        {
-            // TODO: check if at least a few projects are selected
         }
         #endregion
     }
@@ -202,8 +144,6 @@ namespace Caitlyn.ViewModels
     /// <summary>
     /// Display class to be able to select projects.
     /// </summary>
-    /// <remarks>
-    /// </remarks>
     public class ProjectSelection : ObservableObject
     {
         #region Fields
@@ -211,15 +151,6 @@ namespace Caitlyn.ViewModels
         #endregion
 
         #region Constructors
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ProjectSelection"/> class.
-        /// </summary>
-        /// <param name="project">
-        /// The project.
-        /// </param>
-        /// <exception cref="ArgumentNullException">
-        /// The <paramref name="project"/> is <c>null</c>.
-        /// </exception>
         public ProjectSelection(Project project)
         {
             Argument.IsNotNull("project", project);
@@ -229,21 +160,8 @@ namespace Caitlyn.ViewModels
         #endregion
 
         #region Properties
-        /// <summary>
-        /// Gets the project.
-        /// </summary>
-        /// <remarks>
-        /// </remarks>
         public Project Project { get; private set; }
 
-        /// <summary>
-        /// Gets or sets the name.
-        /// </summary>
-        /// <value>
-        /// The name.
-        /// </value>
-        /// <remarks>
-        /// </remarks>
         public string Name
         {
             get
@@ -252,14 +170,6 @@ namespace Caitlyn.ViewModels
             }
         }
 
-        /// <summary>
-        /// Gets or sets a value indicating whether this instance is checked.
-        /// </summary>
-        /// <value>
-        /// <c>true</c> if this instance is checked; otherwise, <c>false</c>.
-        /// </value>
-        /// <remarks>
-        /// </remarks>
         public bool IsChecked
         {
             get

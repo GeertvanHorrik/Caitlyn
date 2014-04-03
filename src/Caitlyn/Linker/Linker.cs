@@ -60,27 +60,38 @@ namespace Caitlyn
         WP7,
 
         /// <summary>
-        /// Windows Phone 8.
+        /// Windows Phone 8.0.
         /// </summary>
         WP80,
 
-        [Obsolete("Use WP80 instead", true)]
-        WP8 = WP80,
+        /// <summary>
+        /// Windows Phone 8.1 (Silverlight).
+        /// </summary>
+        WPSL81,
 
         /// <summary>
-        /// Windows 8.0
+        /// Windows Phone 8.1 (Runtime).
+        /// </summary>
+        WPRT81,
+
+        /// <summary>
+        /// Windows 8.0.
         /// </summary>
         WIN80,
 
         /// <summary>
-        /// Windows 8.1
+        /// Windows 8.1.
         /// </summary>
         WIN81,
 
         /// <summary>
         /// Portable class library.
         /// </summary>
-        PCL
+        PCL,
+
+        Xamarin_Android,
+
+        Xamarin_iOS,
     }
 
     /// <summary>
@@ -362,6 +373,8 @@ namespace Caitlyn
 
             foreach (ProjectItem sourceItem in source)
             {
+                var sourceItemName = sourceItem.Name;
+
                 if (sourceItem.IsLinkedFile())
                 {
                     Log.Debug("Skipping item '{0}' because it is a linked file (so has another root project)", sourceItem.GetObjectName());
@@ -379,7 +392,7 @@ namespace Caitlyn
                 ProjectItem existingTargetItem = null;
                 foreach (ProjectItem targetItem in target)
                 {
-                    if (string.Equals(targetItem.Name, sourceItem.Name))
+                    if (string.Equals(targetItem.Name, sourceItemName))
                     {
                         existingTargetItem = targetItem;
                         break;
@@ -387,6 +400,8 @@ namespace Caitlyn
                 }
 
                 bool isFolder = sourceItem.IsFolder();
+                bool containsSubItems = isFolder || sourceItem.ContainsChildItems();
+                
                 if (existingTargetItem == null)
                 {
                     if (!isFolder)
@@ -429,12 +444,13 @@ namespace Caitlyn
                     }
                 }
 
-                if (sourceItem.IsResourceFile())
+                bool isResourceFile = sourceItem.IsResourceFile();
+                if (isResourceFile)
                 {
                     SynchronizeResourceFileProperties(sourceItem, existingTargetItem, targetProjectType);
                 }
 
-                if (isFolder)
+                if (containsSubItems && !isResourceFile)
                 {
                     AddFilesAndFolders(sourceItem.ProjectItems, existingTargetItem.ProjectItems, targetProjectType, levels, fileFilter);
                 }

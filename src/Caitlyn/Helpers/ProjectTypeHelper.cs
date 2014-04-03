@@ -13,8 +13,17 @@ namespace Caitlyn
 
     public static class ProjectTypeHelper
     {
+        private static ProjectType[] _projectTypes;
+        private static string[] _projectTypesAsStrings; 
+
+        static ProjectTypeHelper()
+        {
+            InitializeAvailableProjectTypes();
+            InitializeAvailableProjectTypesAsStrings();
+        }
+
         #region Methods
-        public static ProjectType[] GetAvailableProjectTypes()
+        private static void InitializeAvailableProjectTypes()
         {
             var types = new List<ProjectType>();
 
@@ -29,7 +38,29 @@ namespace Caitlyn
                 types.Add(projectType);
             }
 
-            return types.Distinct().ToArray();
+            _projectTypes =  types.Distinct().ToArray();
+        }
+
+        public static void InitializeAvailableProjectTypesAsStrings()
+        {
+            var strings = new List<string>();
+
+            foreach (var projectType in GetAvailableProjectTypes())
+            {
+                strings.Add(projectType.ToString().Replace("_", "."));
+            }
+
+            _projectTypesAsStrings = strings.ToArray();
+        }
+
+        public static ProjectType[] GetAvailableProjectTypes()
+        {
+            return _projectTypes;
+        }
+
+        public static string[] GetAvailableProjectTypesAsStrings()
+        {
+            return _projectTypesAsStrings;
         }
         #endregion
     }

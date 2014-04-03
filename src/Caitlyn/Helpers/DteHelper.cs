@@ -220,6 +220,26 @@
         }
 
         /// <summary>
+        /// Determines whether the specified project item contains any child items.
+        /// </summary>
+        /// <param name="projectItem">The project item.</param>
+        /// <exception cref="ArgumentNullException">The <paramref name="projectItem"/> is <c>null</c>.</exception>
+        public static bool ContainsChildItems(this ProjectItem projectItem)
+        {
+            Argument.IsNotNull("projectItem", projectItem);
+
+            bool containsChildItems = false;
+
+            foreach (ProjectItem item in projectItem.ProjectItems)
+            {
+                containsChildItems = true;
+                break;
+            }
+
+            return containsChildItems;
+        }
+
+        /// <summary>
         /// Determines whether the specified project item is a linked file.
         /// </summary>
         /// <param name="projectItem">The project item.</param>

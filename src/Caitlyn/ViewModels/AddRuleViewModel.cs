@@ -42,7 +42,8 @@ namespace Caitlyn.ViewModels
             _configuration = configuration;
 
             AvailableProjects = new List<string>();
-            AvailableProjects.AddRange(from project in visualStudioService.GetAllProjects() select project.Name);
+            AvailableProjects.AddRange(from project in visualStudioService.GetAllProjects() 
+                                       select project.Name);
 
             RootProject = visualStudioService.GetCurrentProject().Name;
 
